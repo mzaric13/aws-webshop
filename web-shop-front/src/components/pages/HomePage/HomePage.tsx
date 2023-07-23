@@ -2,15 +2,20 @@ import React, { useEffect, useState } from "react";
 import Brand from "../../../models/Brand";
 import CategoryValues from "../../../models/CategoryValues";
 import ItemType from "../../../models/ItemType";
+import SortOption from "../../../models/SortOption";
 import Tag from "../../../models/Tag";
 import { getAllBrands } from "../../../services/brand-service";
 import { getAllItemTypes } from "../../../services/item-types-service";
 import { getAllTags } from "../../../services/tag-service";
-import { createCategories } from "../../../utils/Util";
+import { createCategories, getSortOptions } from "../../../utils/Util";
 import Navbar from "../../organisms/Navbar/Navbar";
 import Sidebar from "../../organisms/Sidebar/Sidebar";
+import SidebarFilterMenu from "../../organisms/SidebarFilterMenu/SidebarFilterMenu";
+import SidebarMobile from "../../organisms/SidebarMobile/SidebarMobile";
 
 const HomePage = () => {
+  const [sortOptions, setSortOptions] = useState<SortOption[]>([]);
+  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [categoriesSelected, setCategoriesSelected] = useState<string[]>([]);
   const [selectedBrand, setSelectedBrand] = useState<Brand>();
   const [selectedItemType, setSelectedItemType] = useState<ItemType>();
@@ -22,20 +27,18 @@ const HomePage = () => {
 
   useEffect(() => {
     setIsLoading(true);
-    setTags([...getAllTags()]);
-    setBrands([...getAllBrands()]);
-    setItemTypes([...getAllItemTypes()]);
+    const tgs = getAllTags();
+    const brds = getAllBrands();
+    const ittps = getAllItemTypes();
+    setTags([...tgs]);
+    setBrands([...brds]);
+    setItemTypes([...ittps]);
     setCategories([
-      ...createCategories(
-        brands,
-        itemTypes,
-        tags,
-        handleItemTypeClick,
-        handleBrandClick,
-        handleTagsClick
-      ),
+      ...createCategories(brds, tgs, handleBrandClick, handleTagsClick),
     ]);
+    setSortOptions(getSortOptions());
     setIsLoading(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleTagsClick = (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -66,27 +69,57 @@ const HomePage = () => {
     // TODO: get all items for chosen category
   };
 
-  const handleItemTypeClick = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ): void => {
+  const handleItemTypeClick = (e: React.MouseEvent<HTMLElement>): void => {
     setCategoriesSelected([]);
     setSelectedItemType(
       itemTypes.filter((itemType) => {
-        return itemType.name === e.target.value;
+        return itemType.name === e.currentTarget.id;
       })[0]
     );
-    console.log("item type change");
+    console.log("item type change: " + e.currentTarget.id);
     // TODO: get all items for chosen category
+  };
+
+  const handleSortClick = (event: React.MouseEvent<HTMLElement>) => {
+    console.log("sort option changed");
   };
 
   return (
     <React.Fragment>
       <Navbar />
-      <Sidebar
-        selectedBrand={selectedBrand}
-        selectedItemType={selectedItemType}
-        categories={categories}
-      />
+      <div className="bg-white">
+        <div>
+          <SidebarMobile
+            mobileFiltersOpen={mobileFiltersOpen}
+            setMobileFiltersOpen={setMobileFiltersOpen}
+            itemTypes={itemTypes}
+            categories={categories}
+            handleItemTypeClick={handleItemTypeClick}
+          />
+          <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <SidebarFilterMenu
+              setMobileFiltersOpen={setMobileFiltersOpen}
+              sortOptions={sortOptions}
+              handleClick={handleSortClick}
+            />
+            <section aria-labelledby="products-heading" className="pb-24 pt-6">
+              <h2 id="products-heading" className="sr-only">
+                Products
+              </h2>
+
+              <div className="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-4">
+                <Sidebar
+                  mobile={false}
+                  itemTypes={itemTypes}
+                  itemTypesHandler={handleItemTypeClick}
+                  categories={categories}
+                />
+                <div className="lg:col-span-3"></div>
+              </div>
+            </section>
+          </main>
+        </div>
+      </div>
     </React.Fragment>
   );
 };

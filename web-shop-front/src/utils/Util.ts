@@ -1,38 +1,30 @@
 import Brand from "../models/Brand";
-import CategoryValues from "../models/CategoryValues";
-import ItemType from "../models/ItemType";
+import CategoryValues, { ValueC } from "../models/CategoryValues";
+import SortOption from "../models/SortOption";
 import Tag from "../models/Tag";
 
 export const baseUrl: string = process.env.REACT_APP_API_BASE_URL
   ? process.env.REACT_APP_API_BASE_URL
   : "";
 
+export const getSortOptions = (): SortOption[] => {
+  let s1: SortOption = { name: "A-Z", current: false };
+  let s2: SortOption = { name: "Z-A", current: false };
+  let s3: SortOption = { name: "Price: Low to High", current: false };
+  let s4: SortOption = { name: "Price: High to Low", current: false };
+  return [s1, s2, s3, s4];
+};
+
 export const createCategories = (
   brands: Brand[],
-  itemTypes: ItemType[],
   tags: Tag[],
-  handleItemTypeClick: (e: React.ChangeEvent<HTMLInputElement>) => void,
   handleBrandClick: (e: React.ChangeEvent<HTMLInputElement>) => void,
   handleTagsClick: (e: React.ChangeEvent<HTMLInputElement>) => void
 ): CategoryValues[] => {
   let cats: CategoryValues[] = [];
-  let valuesIt: string[] = [];
-  for (let itemType of itemTypes) {
-    valuesIt.push(itemType.name);
-  }
-  console.log(valuesIt);
-  cats = [
-    ...cats,
-    {
-      category: "Item type",
-      values: valuesIt,
-      handler: handleItemTypeClick,
-    },
-  ];
-  console.log(cats);
-  let valuesB: string[] = [];
+  let valuesB: ValueC[] = [];
   for (let brand of brands) {
-    valuesB.push(brand.name);
+    valuesB.push({ name: brand.name, checked: false });
   }
   cats = [
     ...cats,
@@ -45,7 +37,7 @@ export const createCategories = (
 
   let result = tags.reduce(function (r, a) {
     r[a.description] = r[a.description] || [];
-    r[a.description].push(a.name);
+    r[a.description].push({ name: a.name, checked: false });
     return r;
   }, Object.create(null));
 

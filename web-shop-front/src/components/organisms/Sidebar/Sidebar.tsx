@@ -1,40 +1,42 @@
 import React from "react";
-import Brand from "../../../models/Brand";
+import CategoryValues from "../../../models/CategoryValues";
 import ItemType from "../../../models/ItemType";
-import SidebarCategories from "../../molecules/SidebarCategories/SidebarCategories";
-
-interface CatValue {
-  category: string;
-  values: string[];
-  handler: (e: React.ChangeEvent<HTMLInputElement>) => void;
-}
+import SidebarFilterCategories from "../../molecules/SidebarFilterCategories/SidebarFilterCategories";
+import SidebarFilters from "../../molecules/SidebarFilters/SidebarFilters";
+import SidebarMobileFilters from "../../molecules/SidebarMobileFilters.tsx/SidebarMobileFilters";
 
 interface SidebarProps {
-  selectedBrand: Brand | undefined;
-  selectedItemType: ItemType | undefined;
-  categories: CatValue[];
+  itemTypes: ItemType[];
+  itemTypesHandler: (event: React.MouseEvent<HTMLElement>) => void;
+  categories: CategoryValues[];
+  mobile: boolean;
 }
 
 const Sidebar = ({
+  itemTypes,
+  itemTypesHandler,
   categories,
-  selectedBrand,
-  selectedItemType,
+  mobile,
 }: SidebarProps) => {
+  const getClassNames = () => {
+    if (mobile) return "mt-4 border-t border-gray-200";
+    else return "hidden lg:block";
+  };
+
   return (
-    <section className="sidebar">
-      <div className="logo-container">
-        <h1>🛒</h1>
-      </div>
-      {categories &&
-        categories.map((category, index) => (
-          <SidebarCategories
-            key={index}
-            values={category.values}
-            categoryHandler={category.handler}
-            categoryName={category.category}
-          />
-        ))}
-    </section>
+    <form className={getClassNames()}>
+      <SidebarFilterCategories
+        mobile={mobile}
+        itemTypes={itemTypes}
+        handler={itemTypesHandler}
+      />
+
+      {mobile ? (
+        <SidebarMobileFilters filters={categories} />
+      ) : (
+        <SidebarFilters filters={categories} />
+      )}
+    </form>
   );
 };
 
