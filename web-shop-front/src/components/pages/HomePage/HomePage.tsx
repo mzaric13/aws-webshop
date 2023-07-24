@@ -1,14 +1,18 @@
 import React, { useEffect, useState } from "react";
+import ResponsivePagination from "react-responsive-pagination";
 import Brand from "../../../models/Brand";
 import CategoryValues from "../../../models/CategoryValues";
+import Item from "../../../models/Item";
 import ItemType from "../../../models/ItemType";
 import SortOption from "../../../models/SortOption";
 import Tag from "../../../models/Tag";
 import { getAllBrands } from "../../../services/brand-service";
+import { getAllItems } from "../../../services/item-service";
 import { getAllItemTypes } from "../../../services/item-types-service";
 import { getAllTags } from "../../../services/tag-service";
 import { createCategories, getSortOptions } from "../../../utils/Util";
 import Navbar from "../../organisms/Navbar/Navbar";
+import Products from "../../organisms/Products/Products";
 import Sidebar from "../../organisms/Sidebar/Sidebar";
 import SidebarFilterMenu from "../../organisms/SidebarFilterMenu/SidebarFilterMenu";
 import SidebarMobile from "../../organisms/SidebarMobile/SidebarMobile";
@@ -24,6 +28,7 @@ const HomePage = () => {
   const [tags, setTags] = useState<Tag[]>([]);
   const [categories, setCategories] = useState<CategoryValues[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [products, setProducts] = useState<Item[]>([]);
 
   useEffect(() => {
     setIsLoading(true);
@@ -34,6 +39,7 @@ const HomePage = () => {
     setItemTypes([...getAllItemTypes()]);
     setCategories([...createCategories(brandsVar, tagsVar)]);
     setSortOptions([...getSortOptions()]);
+    setProducts([...getAllItems()]);
     setIsLoading(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -124,6 +130,10 @@ const HomePage = () => {
     console.log(event.currentTarget.innerHTML);
   };
 
+  const handlePageClick = (event: any) => {
+    console.log(event);
+  };
+
   return (
     <React.Fragment>
       <Navbar />
@@ -156,7 +166,17 @@ const HomePage = () => {
                   categories={categories}
                   handlers={[handleBrandClick, handleTagsClick]}
                 />
-                <div className="lg:col-span-3"></div>
+                <div className="lg:col-span-3">
+                  <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
+                    <Products products={products} />
+                    <ResponsivePagination
+                      current={1}
+                      total={100}
+                      onPageChange={handlePageClick}
+                      className="grid grid-cols-10 mt-11"
+                    />
+                  </div>
+                </div>
               </div>
             </section>
           </main>
