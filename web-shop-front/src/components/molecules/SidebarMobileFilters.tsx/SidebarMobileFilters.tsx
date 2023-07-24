@@ -6,9 +6,13 @@ import SidebarFilterSectionInfo from "../../atoms/SidebarFilterSectionInfo/Sideb
 
 interface SidebarMobileFiltersProps {
   filters: CategoryValues[];
+  handlers: ((event: React.MouseEvent<HTMLElement>) => void)[];
 }
 
-const SidebarMobileFilters = ({ filters }: SidebarMobileFiltersProps) => {
+const SidebarMobileFilters = ({
+  filters,
+  handlers,
+}: SidebarMobileFiltersProps) => {
   return (
     <React.Fragment>
       {filters.map((section) => (
@@ -34,6 +38,7 @@ const SidebarMobileFilters = ({ filters }: SidebarMobileFiltersProps) => {
                         section={section}
                         option={option}
                         optionIdx={optionIdx}
+                        handler={handlers[section.handlerIndex]}
                       />
                     </div>
                   ))}

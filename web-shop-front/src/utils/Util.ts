@@ -17,9 +17,7 @@ export const getSortOptions = (): SortOption[] => {
 
 export const createCategories = (
   brands: Brand[],
-  tags: Tag[],
-  handleBrandClick: (e: React.ChangeEvent<HTMLInputElement>) => void,
-  handleTagsClick: (e: React.ChangeEvent<HTMLInputElement>) => void
+  tags: Tag[]
 ): CategoryValues[] => {
   let cats: CategoryValues[] = [];
   let valuesB: ValueC[] = [];
@@ -31,7 +29,7 @@ export const createCategories = (
     {
       category: "Brand",
       values: valuesB,
-      handler: handleBrandClick,
+      handlerIndex: 0,
     },
   ];
 
@@ -47,7 +45,7 @@ export const createCategories = (
       {
         category: cat,
         values: result[cat],
-        handler: handleTagsClick,
+        handlerIndex: 1,
       },
     ];
   }

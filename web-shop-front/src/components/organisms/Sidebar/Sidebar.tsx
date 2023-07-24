@@ -10,6 +10,7 @@ interface SidebarProps {
   itemTypesHandler: (event: React.MouseEvent<HTMLElement>) => void;
   categories: CategoryValues[];
   mobile: boolean;
+  handlers: ((event: React.MouseEvent<HTMLElement>) => void)[];
 }
 
 const Sidebar = ({
@@ -17,6 +18,7 @@ const Sidebar = ({
   itemTypesHandler,
   categories,
   mobile,
+  handlers,
 }: SidebarProps) => {
   const getClassNames = () => {
     if (mobile) return "mt-4 border-t border-gray-200";
@@ -32,9 +34,9 @@ const Sidebar = ({
       />
 
       {mobile ? (
-        <SidebarMobileFilters filters={categories} />
+        <SidebarMobileFilters filters={categories} handlers={handlers} />
       ) : (
-        <SidebarFilters filters={categories} />
+        <SidebarFilters filters={categories} handlers={handlers} />
       )}
     </form>
   );

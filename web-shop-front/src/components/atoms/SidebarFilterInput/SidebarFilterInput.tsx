@@ -6,6 +6,7 @@ interface SidebarFilterInputProps {
   option: ValueC;
   optionIdx: number;
   mobile: boolean;
+  handler: (event: React.MouseEvent<HTMLElement>) => void;
 }
 
 const SidebarFilterInput = ({
@@ -13,6 +14,7 @@ const SidebarFilterInput = ({
   option,
   optionIdx,
   mobile,
+  handler,
 }: SidebarFilterInputProps) => {
   const getClassNames = () => {
     if (mobile) return "ml-3 min-w-0 flex-1 text-gray-500";
@@ -26,8 +28,10 @@ const SidebarFilterInput = ({
         name={`${section.category}[]`}
         defaultValue={option.name}
         type="checkbox"
+        title={option.name}
         defaultChecked={option.checked}
         className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+        onClick={handler}
       />
       <label
         htmlFor={`filter-${section.category}-${optionIdx}`}

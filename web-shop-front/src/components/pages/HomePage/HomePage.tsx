@@ -16,8 +16,8 @@ import SidebarMobile from "../../organisms/SidebarMobile/SidebarMobile";
 const HomePage = () => {
   const [sortOptions, setSortOptions] = useState<SortOption[]>([]);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
-  const [categoriesSelected, setCategoriesSelected] = useState<string[]>([]);
-  const [selectedBrand, setSelectedBrand] = useState<Brand>();
+  const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
+  const [selectedBrands, setSelectedBrands] = useState<Brand[]>([]);
   const [selectedItemType, setSelectedItemType] = useState<ItemType>();
   const [brands, setBrands] = useState<Brand[]>([]);
   const [itemTypes, setItemTypes] = useState<ItemType[]>([]);
@@ -27,61 +27,101 @@ const HomePage = () => {
 
   useEffect(() => {
     setIsLoading(true);
-    const tgs = getAllTags();
-    const brds = getAllBrands();
-    const ittps = getAllItemTypes();
-    setTags([...tgs]);
-    setBrands([...brds]);
-    setItemTypes([...ittps]);
-    setCategories([
-      ...createCategories(brds, tgs, handleBrandClick, handleTagsClick),
-    ]);
-    setSortOptions(getSortOptions());
+    const tagsVar = getAllTags();
+    const brandsVar = getAllBrands();
+    setTags([...tagsVar]);
+    setBrands([...brandsVar]);
+    setItemTypes([...getAllItemTypes()]);
+    setCategories([...createCategories(brandsVar, tagsVar)]);
+    setSortOptions([...getSortOptions()]);
     setIsLoading(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleTagsClick = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    let value = e.target.value;
-    let category = e.target.name;
-    console.log(category);
-    if (categoriesSelected.includes(value))
-      setCategoriesSelected(
-        categoriesSelected.filter((item) => item !== value)
+  const handleTagsClick = (e: React.MouseEvent<HTMLElement>): void => {
+    let tagName = e.currentTarget.title;
+    const exist: Tag = selectedTags.filter((tag) => {
+      return tag.name === tagName;
+    })[0];
+    if (exist === undefined) {
+      const selected: Tag = tags.filter((tag) => {
+        return tag.name === tagName;
+      })[0];
+      const selectedTagsVar = [...selectedTags, selected];
+      setSelectedTags([...selectedTagsVar]);
+      changeTagChecked(selected);
+    } else {
+      const selectedTagsVar = selectedTags.filter(
+        (item) => item.name !== tagName
       );
-    else
-      setCategoriesSelected((categoriesSelected) => [
-        ...categoriesSelected,
-        value,
-      ]);
-    console.log(categoriesSelected);
-    // TODO: get all items with selected tags
+      setSelectedTags([...selectedTagsVar]);
+      changeTagChecked(exist);
+    }
+    // TODO: get all items for criteria
   };
 
-  const handleBrandClick = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    setCategoriesSelected([]);
-    setSelectedBrand(
-      brands.filter((brand) => {
-        return brand.name === e.target.value;
-      })[0]
-    );
-    console.log("brand change");
+  const changeTagChecked = (tag: Tag) => {
+    for (let category of categories) {
+      if (category.category === tag.description) {
+        for (let value of category.values) {
+          if (value.name === tag.name) {
+            value.checked = !value.checked;
+            break;
+          }
+        }
+        break;
+      }
+    }
+    setCategories(categories);
+  };
+
+  const handleBrandClick = (e: React.MouseEvent<HTMLElement>) => {
+    const brandName = e.currentTarget.title;
+    const exist: Brand = selectedBrands.filter((brand) => {
+      return brand.name === e.currentTarget.title;
+    })[0];
+    if (exist === undefined) {
+      const selected: Brand = brands.filter((brand) => {
+        return brand.name === brandName;
+      })[0];
+      const selectedBrandsVar = [...selectedBrands, selected];
+      setSelectedBrands([...selectedBrandsVar]);
+      changeBrandChecked(selected);
+    } else {
+      const selectedBrandsVar = selectedBrands.filter(
+        (item) => item.name !== brandName
+      );
+      setSelectedBrands([...selectedBrandsVar]);
+      changeBrandChecked(exist);
+    }
     // TODO: get all items for chosen category
   };
 
+  const changeBrandChecked = (brand: Brand) => {
+    for (let category of categories) {
+      if (category.category === "Brand") {
+        for (let value of category.values) {
+          if (value.name === brand.name) {
+            value.checked = !value.checked;
+            break;
+          }
+        }
+        break;
+      }
+    }
+    setCategories(categories);
+  };
+
   const handleItemTypeClick = (e: React.MouseEvent<HTMLElement>): void => {
-    setCategoriesSelected([]);
-    setSelectedItemType(
-      itemTypes.filter((itemType) => {
-        return itemType.name === e.currentTarget.id;
-      })[0]
-    );
-    console.log("item type change: " + e.currentTarget.id);
+    const selected = itemTypes.filter((itemType) => {
+      return itemType.name === e.currentTarget.id;
+    })[0];
+    setSelectedItemType(selected);
     // TODO: get all items for chosen category
   };
 
   const handleSortClick = (event: React.MouseEvent<HTMLElement>) => {
-    console.log("sort option changed");
+    console.log(event.currentTarget.innerHTML);
   };
 
   return (
@@ -95,6 +135,7 @@ const HomePage = () => {
             itemTypes={itemTypes}
             categories={categories}
             handleItemTypeClick={handleItemTypeClick}
+            handlers={[handleBrandClick, handleTagsClick]}
           />
           <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <SidebarFilterMenu
@@ -113,6 +154,7 @@ const HomePage = () => {
                   itemTypes={itemTypes}
                   itemTypesHandler={handleItemTypeClick}
                   categories={categories}
+                  handlers={[handleBrandClick, handleTagsClick]}
                 />
                 <div className="lg:col-span-3"></div>
               </div>

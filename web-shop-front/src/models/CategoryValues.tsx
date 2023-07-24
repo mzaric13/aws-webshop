@@ -6,7 +6,7 @@ export interface ValueC {
 interface CategoryValues {
   category: string;
   values: ValueC[];
-  handler: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handlerIndex: number;
 }
 
 export default CategoryValues;

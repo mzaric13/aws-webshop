@@ -12,8 +12,8 @@ const SidebarFilterCategory = ({
   mobile,
 }: SidebarFilterCategoryProps) => {
   const getClassNames = () => {
-    if (mobile) return "block px-2 py-3";
-    else return "";
+    if (mobile) return "block px-2 py-3 cursor-pointer";
+    else return "cursor-pointer";
   };
 
   return (

@@ -11,6 +11,7 @@ interface SidebarMobileProps {
   itemTypes: ItemType[];
   categories: CategoryValues[];
   handleItemTypeClick: (event: React.MouseEvent<HTMLElement>) => void;
+  handlers: ((event: React.MouseEvent<HTMLElement>) => void)[];
 }
 
 const SidebarMobile = ({
@@ -19,6 +20,7 @@ const SidebarMobile = ({
   itemTypes,
   categories,
   handleItemTypeClick,
+  handlers,
 }: SidebarMobileProps) => {
   return (
     <Transition.Root show={mobileFiltersOpen} as={Fragment}>
@@ -56,6 +58,7 @@ const SidebarMobile = ({
                 itemTypes={itemTypes}
                 itemTypesHandler={handleItemTypeClick}
                 mobile={true}
+                handlers={handlers}
               />
             </Dialog.Panel>
           </Transition.Child>
