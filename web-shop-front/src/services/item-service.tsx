@@ -1,41 +1,27 @@
-import Item from "../models/Item";
+import axios from "axios";
+import Brand from "../models/Brand";
+import { ReturnValueItems } from "../models/Item";
+import ItemType from "../models/ItemType";
+import SearchData from "../models/SearchData";
+import Tag from "../models/Tag";
+import { baseUrl } from "../utils/Util";
 
-export const getAllItems = () => {
-  const i1: Item = {
-    id: 1,
-    name: "NIKE AIR ZOOM CROSSOVER",
-    description: "Basketball deep shoes",
-    price: 15.4,
+export const getAllItems = (
+  page: number,
+  pageSize: number,
+  itemType: ItemType | undefined,
+  brands: Brand[],
+  tags: Tag[],
+  sortOption: string
+) => {
+  const searchData: SearchData = {
+    page: page,
+    pageSize: pageSize,
+    itemType: itemType,
+    brands: brands,
+    tags: tags,
+    sortOption: sortOption,
   };
-  const i2: Item = {
-    id: 2,
-    name: "NIKE AIR ZOOM CROSSOVER",
-    description: "Basketball deep shoes",
-    price: 15.4,
-  };
-  const i3: Item = {
-    id: 3,
-    name: "NIKE AIR ZOOM CROSSOVER",
-    description: "Basketball deep shoes",
-    price: 15.4,
-  };
-  const i4: Item = {
-    id: 4,
-    name: "NIKE AIR ZOOM CROSSOVER",
-    description: "Basketball deep shoes",
-    price: 15.4,
-  };
-  const i5: Item = {
-    id: 5,
-    name: "NIKE AIR ZOOM CROSSOVER",
-    description: "Basketball deep shoes",
-    price: 15.4,
-  };
-  const i6: Item = {
-    id: 6,
-    name: "NIKE AIR ZOOM CROSSOVER",
-    description: "Basketball deep shoes",
-    price: 15.4,
-  };
-  return [i1, i2, i3, i4, i5, i6];
+  console.log(sortOption);
+  return axios.post<ReturnValueItems>(`${baseUrl}/items`, searchData);
 };

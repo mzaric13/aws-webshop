@@ -3,8 +3,8 @@ import CategoryValues, { ValueC } from "../models/CategoryValues";
 import SortOption from "../models/SortOption";
 import Tag from "../models/Tag";
 
-export const baseUrl: string = process.env.REACT_APP_API_BASE_URL
-  ? process.env.REACT_APP_API_BASE_URL
+export const baseUrl: string = process.env.REACT_APP_API_URL
+  ? process.env.REACT_APP_API_URL
   : "";
 
 export const getSortOptions = (): SortOption[] => {
@@ -17,12 +17,17 @@ export const getSortOptions = (): SortOption[] => {
 
 export const createCategories = (
   brands: Brand[],
-  tags: Tag[]
+  tags: Tag[],
+  selectedBrands: Brand[],
+  selectedTags: Tag[]
 ): CategoryValues[] => {
   let cats: CategoryValues[] = [];
   let valuesB: ValueC[] = [];
   for (let brand of brands) {
-    valuesB.push({ name: brand.name, checked: false });
+    valuesB.push({
+      name: brand.name,
+      checked: selectedBrands.includes(brand) ? true : false,
+    });
   }
   cats = [
     ...cats,
@@ -35,7 +40,10 @@ export const createCategories = (
 
   let result = tags.reduce(function (r, a) {
     r[a.description] = r[a.description] || [];
-    r[a.description].push({ name: a.name, checked: false });
+    r[a.description].push({
+      name: a.name,
+      checked: selectedTags.includes(a) ? true : false,
+    });
     return r;
   }, Object.create(null));
 

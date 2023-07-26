@@ -15,10 +15,10 @@ const SidebarMobileFilters = ({
 }: SidebarMobileFiltersProps) => {
   return (
     <React.Fragment>
-      {filters.map((section) => (
+      {filters.map((section, index) => (
         <Disclosure
           as="div"
-          key={section.category}
+          key={index}
           className="border-t border-gray-200 px-4 py-6"
         >
           {({ open }) => (

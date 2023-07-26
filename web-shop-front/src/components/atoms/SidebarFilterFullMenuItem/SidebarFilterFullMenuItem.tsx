@@ -22,7 +22,7 @@ const SidebarFilterFullMenuItem = ({
           onClick={handleClick}
           className={classNames(
             option.current ? "font-medium text-gray-900" : "text-gray-500",
-            active ? "bg-gray-100" : "",
+            option.current ? "bg-gray-100" : "",
             "block px-4 py-2 text-sm cursor-pointer"
           )}
         >

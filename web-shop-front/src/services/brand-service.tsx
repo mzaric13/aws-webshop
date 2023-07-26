@@ -1,17 +1,7 @@
-import Brand from "../models/Brand";
+import axios from "axios";
+import { ReturnValueBrand } from "../models/Brand";
+import { baseUrl } from "../utils/Util";
 
 export const getAllBrands = () => {
-  let b1: Brand = {
-    id: 1,
-    name: "NIKE",
-  };
-  let b2: Brand = {
-    id: 2,
-    name: "ADIDAS",
-  };
-  let b3: Brand = {
-    id: 3,
-    name: "PUMA",
-  };
-  return [b1, b2, b3];
+  return axios.get<ReturnValueBrand>(`${baseUrl}/brand`);
 };
