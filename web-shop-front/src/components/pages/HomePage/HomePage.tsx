@@ -11,7 +11,11 @@ import { getAllBrands } from "../../../services/brand-service";
 import { getAllItems } from "../../../services/item-service";
 import { getAllItemTypes } from "../../../services/item-types-service";
 import { getAllTags } from "../../../services/tag-service";
-import { createCategories, getSortOptions } from "../../../utils/Util";
+import {
+  createCategories,
+  getNavbarLinks,
+  getSortOptions,
+} from "../../../utils/Util";
 import LoadingSpinner from "../../organisms/LoadingSpinner/LoadingSpinner";
 import Navbar from "../../organisms/Navbar/Navbar";
 import Products from "../../organisms/Products/Products";
@@ -246,7 +250,7 @@ const HomePage = () => {
         <LoadingSpinner />
       ) : (
         <React.Fragment>
-          <Navbar />
+          <Navbar navbarLinks={getNavbarLinks("")} />
           <div className="bg-white">
             <div>
               <SidebarMobile

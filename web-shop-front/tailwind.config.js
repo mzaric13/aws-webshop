@@ -17,7 +17,10 @@ module.exports = {
             },
             colors: {
                 'first-ls': '#f3f3f3',
-                'second-ls': '#383636'
+                'second-ls': '#383636',
+                'navbar-text': '#eee',
+                'navbar-link-hover': '#f90',
+                'navbar-bg': '#232f3e'
             }
         },
     },
