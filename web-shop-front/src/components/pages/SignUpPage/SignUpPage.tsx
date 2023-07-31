@@ -82,7 +82,7 @@ const SignUpPage = () => {
           <SignUpFormFields handleInputChange={handleInputChange} />
         </div>
         <div className="mt-6 mb-36 flex items-center justify-end gap-x-6 sm:col-span-6">
-          <Button type="submit" />
+          <Button type="submit" text="Register" />
         </div>
       </div>
     </form>

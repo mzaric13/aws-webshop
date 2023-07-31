@@ -14,7 +14,7 @@ const AdminHomePage = () => {
 
   const [page, setPage] = useState<number>(1);
   const [numberOfItems, setNumberOfItems] = useState<number>(0);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [products, setProducts] = useState<Item[]>([]);
 
   useEffect(() => {

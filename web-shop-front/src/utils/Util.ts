@@ -79,3 +79,36 @@ export const getNavbarLinks = (role: string): NavbarLinks[] => {
   }
   return [l1, l2, l3];
 };
+
+export const getClothesSizes = () => {
+  return [
+    { name: "XS" },
+    { name: "S" },
+    { name: "M" },
+    { name: "L" },
+    { name: "XL" },
+    { name: "XXL" },
+    { name: "3XL" },
+  ];
+};
+
+export const getShoesSizes = () => {
+  return [
+    { name: "34" },
+    { name: "35" },
+    { name: "36" },
+    { name: "37" },
+    { name: "38" },
+    { name: "39" },
+    { name: "40" },
+    { name: "41" },
+    { name: "42" },
+    { name: "43" },
+    { name: "44" },
+    { name: "45" },
+    { name: "46" },
+    { name: "47" },
+    { name: "48" },
+    { name: "49" },
+  ];
+};
