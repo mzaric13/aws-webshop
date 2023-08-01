@@ -55,11 +55,11 @@ def singup_user(event, client_id):
             UserAttributes=[
                 {
                     'Name': 'given_name',
-                    'Value': event['given_name']
+                    'Value': event['givenName']
                 },
                 {
                     'Name': 'family_name',
-                    'Value': event['family_name']
+                    'Value': event['familyName']
                 },
                 {
                     'Name': 'email',
@@ -71,7 +71,7 @@ def singup_user(event, client_id):
                 },
                 {
                     'Name': 'phone_number',
-                    'Value': event['phone_number']
+                    'Value': event['phoneNumber']
                 },
                 {
                     'Name': 'address',
@@ -79,7 +79,7 @@ def singup_user(event, client_id):
                 }
             ]
         )
-        return User(event['username'], event['given_name'], event['family_name'], event['address'], event['phone_number'], event['birthdate'])
+        return User(event['username'], event['givenName'], event['familyName'], event['address'], event['phoneNumber'], event['birthdate'])
     except ClientError as e:
         return e
     
@@ -91,18 +91,24 @@ def lambda_handler(event, context):
         if not isinstance(response, User):
             return {
                 'statusCode': 500,
-                'body': json.dumps(f"Error writing object to database: {str(response)}")
+                'body': f"Error writing object to database: {str(response)}"
             }
         conn = get_connection(secret_string_db)
-        write_user_to_database(conn, response)
-        conn.close()
-        return {
-            'statusCode': 200,
-            'body': json.dumps('You signed up successfully.')
-        }
+        if write_user_to_database(conn, response):
+            conn.close()
+            return {
+                'statusCode': 200,
+                'body': 'You signed up successfully.'
+            }
+        else:
+            conn.close()
+            return {
+                'statusCode': 500,
+                'body': 'Server error while signing up.'
+            }
     else:
         return {
             'statusCode': 500,
-            'body': json.dumps('Error getting credentials')
+            'body': 'Error getting credentials'
         }
             
