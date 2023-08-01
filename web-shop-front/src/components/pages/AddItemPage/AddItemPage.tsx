@@ -1,13 +1,17 @@
 import React, { FormEvent, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Brand from "../../../models/Brand";
+import { ItemCreation } from "../../../models/Item";
 import ItemAvailability from "../../../models/ItemAvailability";
 import ItemType from "../../../models/ItemType";
 import Tag from "../../../models/Tag";
 import { getAllBrands } from "../../../services/brand-service";
+import { addItem } from "../../../services/item-service";
 import { getAllItemTypes } from "../../../services/item-types-service";
 import { getAllTags } from "../../../services/tag-service";
 import { getNavbarLinks } from "../../../utils/Util";
+import { validateItemData } from "../../../utils/Validator";
 import Button from "../../atoms/Button/Button";
 import AddItemAdvanced from "../../organisms/AddItemAdvanced/AddItemAdvanced";
 import AddItemBasic from "../../organisms/AddItemBasic/AddItemBasic";
@@ -20,12 +24,13 @@ const AddItemPage = () => {
   const [tags, setTags] = useState<Tag[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [advancedPage, setAdvancedPage] = useState<boolean>(false);
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
     description: "",
     itemType: { id: -1, name: "" },
     brand: { id: -1, name: "" },
-    sizes: [""],
+    sizes: [{ name: "" }],
     tags: [{ id: -1, name: "", description: "" }],
     pictures: [],
     price: 0,
@@ -96,7 +101,12 @@ const AddItemPage = () => {
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const name = event.target.name;
-    const value = event.target.value;
+    let value;
+    if (name === "yearsValid") {
+      value = Number(event.target.value);
+    } else {
+      value = event.target.value;
+    }
     const newFormData = {
       ...formData,
       [name]: value,
@@ -154,11 +164,45 @@ const AddItemPage = () => {
   };
 
   const handleAdvancePage = (event: React.MouseEvent<HTMLButtonElement>) => {
+    const newFormData = {
+      ...formData,
+      itemAvailabilities: [],
+      price: 0,
+    };
+    setFormData(newFormData);
     setAdvancedPage(!advancedPage);
   };
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     console.log(formData);
+    const message = validateItemData(formData);
+    if (message === "Success") {
+      const itemCreation: ItemCreation = {
+        name: formData.name,
+        description: formData.description,
+        brand: formData.brand,
+        itemType: formData.itemType,
+        itemAvailabilities: formData.itemAvailabilities,
+        price: formData.price,
+        pictures: formData.pictures,
+        sizes: formData.sizes.map((size) => size.name),
+        tags: formData.tags,
+      };
+      addItem(itemCreation)
+        .then((res) => {
+          if (res.data.statusCode === 200) {
+            toast.success(res.data.message);
+            navigate("/admin-products");
+          } else {
+            toast.error(res.data.message);
+          }
+        })
+        .catch((err) => {
+          toast.error(err);
+        });
+    } else {
+      toast.error(message);
+    }
     event.preventDefault();
   };
 

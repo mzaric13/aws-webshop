@@ -1,9 +1,10 @@
 import axios from "axios";
 import Brand from "../models/Brand";
-import { ReturnValueItems } from "../models/Item";
+import { ItemCreation, ReturnValueItems } from "../models/Item";
 import ItemType from "../models/ItemType";
 import SearchData from "../models/SearchData";
 import Tag from "../models/Tag";
+import { SignUpReturnValue } from "../models/User";
 import { baseUrl } from "../utils/Util";
 
 export const getAllItems = (
@@ -22,6 +23,12 @@ export const getAllItems = (
     tags: tags,
     sortOption: sortOption,
   };
-  console.log(sortOption);
   return axios.post<ReturnValueItems>(`${baseUrl}/items`, searchData);
+};
+
+export const addItem = (itemCreation: ItemCreation) => {
+  return axios.post<SignUpReturnValue>(
+    `${baseUrl}/items/add-item`,
+    itemCreation
+  );
 };

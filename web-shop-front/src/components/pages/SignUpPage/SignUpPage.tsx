@@ -37,7 +37,6 @@ const SignUpPage = () => {
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     const message = validateUserData(formData);
     if (message === "Success") {
-      console.log("usao");
       const user: User = {
         username: formData.email,
         password: formData.password,
@@ -57,7 +56,6 @@ const SignUpPage = () => {
       };
       signUp(user)
         .then((res) => {
-          console.log(res);
           if (res.data.statusCode === 200) {
             toast.success(res.data.message);
             navigate("/");

@@ -37,3 +37,27 @@ export const validateUserData = (formData: any) => {
   if (formData.city === "") return "City not given";
   return "Success";
 };
+
+export const validateItemData = (formData: any) => {
+  if (formData.name === "") return "Item name is not entered";
+  if (formData.description === "") return "Item description is not entered";
+  if (formData.itemType.id === -1) return "Item type is not selected";
+  if (formData.brand.id === -1) return "Brand is not selected";
+  if (formData.price <= 0) return "Price must be positive number";
+  if (formData.itemAvailabilities.length <= 0)
+    return "Item availability not inserted";
+  if (
+    formData.itemType.name === "CLOTHES" ||
+    formData.itemType.name === "SHOES"
+  ) {
+    if (formData.sizes.length <= 0) return "Item sizes not selected";
+    for (let itemAvailability of formData.itemAvailabilities) {
+      if (itemAvailability.numberOfItemsLeft <= 0)
+        return "Item availability must be positive number";
+    }
+  } else {
+    if (formData.itemAvailabilities[0].numberOfItemsLeft <= 0)
+      return "Item availability must be positive number";
+  }
+  return "Success";
+};
