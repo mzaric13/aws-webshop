@@ -21,11 +21,13 @@ class Tag:
         self.description = description
 
 class ReturnItem:
-    def __init__(self, id: int, name: str, description: str, pictures, price):
+    def __init__(self, id: int, name: str, description: str, pictures, price, item_type_id, brand_id):
         self.id = id
         self.name = name
         self.description = description
         self.price = price
+        self.item_type_id = item_type_id
+        self.brand_id = brand_id
         # TODO
         self.pictures = pictures
 
@@ -34,7 +36,9 @@ class ReturnItem:
             'id': self.id,
             'name': self.name,
             'description': self.description,
-            'price': self.price
+            'price': self.price,
+            'brandId': self.brand_id,
+            'itemTypeId': self.item_type_id
         }
         return data
 
@@ -83,15 +87,11 @@ def get_connection(secret_string):
     )
     return conn
 
-def create_query(search_data: SearchData):
-    query = "SELECT DISTINCT it.id, it.name, it.description, pli.price FROM items it INNER JOIN item_tags it_tg ON it.id = it_tg.item_id INNER JOIN tags tg ON it_tg.tag_id = tg.id INNER JOIN brands bd ON it.brand_id = bd.id INNER JOIN price_list_items pli ON pli.item_id = it.id INNER JOIN price_lists_item plsi ON pli.id = plsi.price_list_item_id INNER JOIN price_lists pl ON pl.id = plsi.price_list_id WHERE pl.valid = true"
-    b = True
+def create_query(query, search_data: SearchData):
     if search_data.item_type is not None:
         query += " AND it.item_type_id = " + str(search_data.item_type.id)
     query += create_brands_part(search_data.brands)
     query += create_tags_part(search_data.tags)
-    query += create_sort_part(search_data.sort)
-    query += create_pagination_part(search_data.page, search_data.page_size)
     return query
     
 def create_brands_part(brands):
@@ -126,7 +126,10 @@ def create_pagination_part(page, page_size):
 
 def collect_items(conn, search_data: SearchData):
     try:
-        query = create_query(search_data)
+        query = "SELECT DISTINCT it.id, it.name, it.description, pli.price, it.item_type_id, it.brand_id FROM items it INNER JOIN item_tags it_tg ON it.id = it_tg.item_id INNER JOIN tags tg ON it_tg.tag_id = tg.id INNER JOIN brands bd ON it.brand_id = bd.id INNER JOIN price_list_items pli ON pli.item_id = it.id INNER JOIN price_lists_item plsi ON pli.id = plsi.price_list_item_id INNER JOIN price_lists pl ON pl.id = plsi.price_list_id WHERE pl.valid = true"
+        query = create_query(query, search_data)
+        query += create_sort_part(search_data.sort)
+        query += create_pagination_part(search_data.page, search_data.page_size)
         cursor = conn.cursor()
         cursor.execute(query)
         items = cursor.fetchall()
@@ -135,11 +138,24 @@ def collect_items(conn, search_data: SearchData):
     except Exception as e:
         print(f"Error reading from database: {str(e)}")
         return False
+        
+def get_number_of_items(conn, search_data: SearchData):
+    try:
+        query = "SELECT COUNT(DISTINCT (it.id, it.name, it.description, pli.price)) FROM items it INNER JOIN item_tags it_tg ON it.id = it_tg.item_id INNER JOIN tags tg ON it_tg.tag_id = tg.id INNER JOIN brands bd ON it.brand_id = bd.id INNER JOIN price_list_items pli ON pli.item_id = it.id INNER JOIN price_lists_item plsi ON pli.id = plsi.price_list_item_id INNER JOIN price_lists pl ON pl.id = plsi.price_list_id WHERE pl.valid = true"
+        query = create_query(query, search_data)
+        cursor = conn.cursor()
+        cursor.execute(query)
+        number = cursor.fetchall()
+        cursor.close()
+        return number
+    except Exception as e:
+        print(f"Error reading from database: {str(e)}")
+        return False
     
 def transform_items(data):
     items = []
     for item in data:
-        i = ReturnItem(int(item[0]), item[1], item[2], [], float(item[3]))
+        i = ReturnItem(int(item[0]), item[1], item[2], [], float(item[3]), int(item[4]), int(item[5]))
         items.append(i.to_json())
     return items
     
@@ -149,6 +165,7 @@ def lambda_handler(event, context):
         connection = get_connection(secret_string_db)
         search_data = convert_to_search_data(event)
         items = collect_items(connection, search_data)
+        items_num = get_number_of_items(connection, search_data)
         connection.close()
         if items == False:
             return {
@@ -157,7 +174,7 @@ def lambda_handler(event, context):
             }
         return {
             'statusCode': 200,
-            'body': json.dumps(transform_items(items))
+            'body': {"items": transform_items(items), "numberOfItems": items_num[0][0]}
         }
     else:
         return {

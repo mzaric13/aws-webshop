@@ -37,7 +37,6 @@ const SignUpPage = () => {
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     const message = validateUserData(formData);
     if (message === "Success") {
-      console.log("usao");
       const user: User = {
         username: formData.email,
         password: formData.password,
@@ -57,7 +56,6 @@ const SignUpPage = () => {
       };
       signUp(user)
         .then((res) => {
-          console.log(res);
           if (res.data.statusCode === 200) {
             toast.success(res.data.message);
             navigate("/");
@@ -82,7 +80,7 @@ const SignUpPage = () => {
           <SignUpFormFields handleInputChange={handleInputChange} />
         </div>
         <div className="mt-6 mb-36 flex items-center justify-end gap-x-6 sm:col-span-6">
-          <Button type="submit" />
+          <Button type="submit" text="Register" />
         </div>
       </div>
     </form>

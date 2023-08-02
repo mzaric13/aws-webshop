@@ -67,7 +67,7 @@ def lambda_handler(event, context):
             }
         return {
             'statusCode': 200,
-            'body': json.dumps(transform_tags(item_types))
+            'body': transform_tags(item_types)
         }
     else:
         return {
