@@ -21,11 +21,13 @@ class Tag:
         self.description = description
 
 class ReturnItem:
-    def __init__(self, id: int, name: str, description: str, pictures, price):
+    def __init__(self, id: int, name: str, description: str, pictures, price, item_type_id, brand_id):
         self.id = id
         self.name = name
         self.description = description
         self.price = price
+        self.item_type_id = item_type_id
+        self.brand_id = brand_id
         # TODO
         self.pictures = pictures
 
@@ -34,7 +36,9 @@ class ReturnItem:
             'id': self.id,
             'name': self.name,
             'description': self.description,
-            'price': self.price
+            'price': self.price,
+            'brandId': self.brand_id,
+            'itemTypeId': self.item_type_id
         }
         return data
 
@@ -122,7 +126,7 @@ def create_pagination_part(page, page_size):
 
 def collect_items(conn, search_data: SearchData):
     try:
-        query = "SELECT DISTINCT it.id, it.name, it.description, pli.price FROM items it INNER JOIN item_tags it_tg ON it.id = it_tg.item_id INNER JOIN tags tg ON it_tg.tag_id = tg.id INNER JOIN brands bd ON it.brand_id = bd.id INNER JOIN price_list_items pli ON pli.item_id = it.id INNER JOIN price_lists_item plsi ON pli.id = plsi.price_list_item_id INNER JOIN price_lists pl ON pl.id = plsi.price_list_id WHERE pl.valid = true"
+        query = "SELECT DISTINCT it.id, it.name, it.description, pli.price, it.item_type_id, it.brand_id FROM items it INNER JOIN item_tags it_tg ON it.id = it_tg.item_id INNER JOIN tags tg ON it_tg.tag_id = tg.id INNER JOIN brands bd ON it.brand_id = bd.id INNER JOIN price_list_items pli ON pli.item_id = it.id INNER JOIN price_lists_item plsi ON pli.id = plsi.price_list_item_id INNER JOIN price_lists pl ON pl.id = plsi.price_list_id WHERE pl.valid = true"
         query = create_query(query, search_data)
         query += create_sort_part(search_data.sort)
         query += create_pagination_part(search_data.page, search_data.page_size)
@@ -151,7 +155,7 @@ def get_number_of_items(conn, search_data: SearchData):
 def transform_items(data):
     items = []
     for item in data:
-        i = ReturnItem(int(item[0]), item[1], item[2], [], float(item[3]))
+        i = ReturnItem(int(item[0]), item[1], item[2], [], float(item[3]), int(item[4]), int(item[5]))
         items.append(i.to_json())
     return items
     
