@@ -25,12 +25,37 @@ export interface ItemCreation {
   itemAvailabilities: ItemAvailability[];
 }
 
+export interface ReturnValueItemAdditionalData {
+  statusCode: number;
+  body: ItemAdditionalData[];
+}
+
+export interface ItemAdditionalData {
+  itemId: number;
+  itemAvailabilities: ItemAvailability[];
+  sizes: string[];
+  tagIds: number[];
+}
+
+export interface UpdateItem {
+  id: number;
+  itemTypeId: number;
+  name: string;
+  description: string;
+  brandId: number;
+  itemAvailabilities: ItemAvailability[];
+  sizes: string[];
+  tagIds: number[];
+}
+
 interface Item {
   id: number;
   name: string;
   description: string;
   pictures?: string[];
   price: number;
+  itemTypeId: number;
+  brandId: number;
 }
 
 export default Item;

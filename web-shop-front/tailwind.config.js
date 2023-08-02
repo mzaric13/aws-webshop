@@ -14,6 +14,7 @@ module.exports = {
         extend: {
             zIndex: {
                 '200': '200',
+                '150': '150'
             },
             colors: {
                 'first-ls': '#f3f3f3',
@@ -21,6 +22,9 @@ module.exports = {
                 'navbar-text': '#eee',
                 'navbar-link-hover': '#f90',
                 'navbar-bg': '#232f3e'
+            },
+            backdropBlur: {
+                xs: '2px',
             }
         },
     },

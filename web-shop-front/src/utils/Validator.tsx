@@ -1,3 +1,5 @@
+import { UpdateItem } from "../models/Item";
+
 export const validateUserData = (formData: any) => {
   if (
     formData.email === "" ||
@@ -57,6 +59,26 @@ export const validateItemData = (formData: any) => {
     }
   } else {
     if (formData.itemAvailabilities[0].numberOfItemsLeft <= 0)
+      return "Item availability must be positive number";
+  }
+  return "Success";
+};
+
+export const validateUpdateItemData = (updateItem: UpdateItem) => {
+  if (updateItem.name === "") return "Item name is not entered";
+  if (updateItem.description === "") return "Item description is not entered";
+  if (updateItem.itemTypeId === -1) return "Item type is not selected";
+  if (updateItem.brandId === -1) return "Brand is not selected";
+  if (updateItem.itemAvailabilities.length <= 0)
+    return "Item availability not inserted";
+  if (updateItem.itemTypeId === 1 || updateItem.itemTypeId === 2) {
+    if (updateItem.sizes.length <= 0) return "Item sizes not selected";
+    for (let itemAvailability of updateItem.itemAvailabilities) {
+      if (itemAvailability.numberOfItemsLeft <= 0)
+        return "Item availability must be positive number";
+    }
+  } else {
+    if (updateItem.itemAvailabilities[0].numberOfItemsLeft <= 0)
       return "Item availability must be positive number";
   }
   return "Success";

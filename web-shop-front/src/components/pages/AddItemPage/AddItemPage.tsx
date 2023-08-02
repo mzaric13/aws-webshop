@@ -102,7 +102,7 @@ const AddItemPage = () => {
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const name = event.target.name;
     let value;
-    if (name === "yearsValid") {
+    if (name === "price") {
       value = Number(event.target.value);
     } else {
       value = event.target.value;

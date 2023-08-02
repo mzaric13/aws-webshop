@@ -1,5 +1,7 @@
+import { FaTimes } from "react-icons/fa";
+
 interface ButtonProps {
-  type: "submit" | "button" | "reset" | "add" | "back" | undefined;
+  type: "submit" | "button" | "reset" | "add" | "back" | "close" | undefined;
   handleClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
   text?: string;
 }
@@ -21,6 +23,17 @@ const Button = ({ type, handleClick, text }: ButtonProps) => {
     return (
       <button type="button" className={getClassNames()} onClick={handleClick}>
         {text}
+      </button>
+    );
+  } else if (type === "close") {
+    return (
+      <button
+        type="button"
+        className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+        data-modal-hide="medium-modal"
+        onClick={handleClick}
+      >
+        <FaTimes className="border-none opacity-100 outline-none bg-transparent" />
       </button>
     );
   } else {

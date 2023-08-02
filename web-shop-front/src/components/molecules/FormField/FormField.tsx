@@ -7,6 +7,7 @@ interface FormFieldProps {
   type: string;
   text: string;
   fieldType: string;
+  value?: string;
   handleInputChange: (evnt: React.ChangeEvent<HTMLInputElement>) => void;
   options?: any[];
   handleSelectChange?: (it: any) => void;
@@ -18,6 +19,7 @@ const FormField = ({
   type,
   text,
   fieldType,
+  value,
   handleInputChange,
   options,
   handleSelectChange,
@@ -74,6 +76,7 @@ const FormField = ({
             type={type}
             name={name}
             handleInputChange={handleInputChange}
+            value={value}
           />
         </div>
       </div>
