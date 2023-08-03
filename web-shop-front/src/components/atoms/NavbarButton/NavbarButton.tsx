@@ -1,22 +1,30 @@
+import { Dispatch, SetStateAction } from "react";
 import { FaBars, FaTimes } from "react-icons/fa";
-import "./NavbarButton.css";
 
 interface NavbarButtonProps {
   isTimes: boolean;
-  showNavbar: () => void;
+  setMobileMenuOpen: Dispatch<SetStateAction<boolean>>;
 }
 
-const NavbarButton = ({ isTimes, showNavbar }: NavbarButtonProps) => {
+const NavbarButton = ({ isTimes, setMobileMenuOpen }: NavbarButtonProps) => {
   if (isTimes) {
     return (
-      <button className="nav-btn nav-close-btn" onClick={showNavbar}>
-        <FaTimes />
+      <button
+        type="button"
+        className="-m-2.5 rounded-md p-2.5 text-gray-700"
+        onClick={() => setMobileMenuOpen(false)}
+      >
+        <FaTimes className="h-6 w-6 text-white" aria-hidden="true" />
       </button>
     );
   } else {
     return (
-      <button className="nav-btn" onClick={showNavbar}>
-        <FaBars />
+      <button
+        type="button"
+        className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
+        onClick={() => setMobileMenuOpen(true)}
+      >
+        <FaBars className="h-6 w-6 text-white" aria-hidden="true" />
       </button>
     );
   }

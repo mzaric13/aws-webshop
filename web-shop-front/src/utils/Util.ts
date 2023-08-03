@@ -63,7 +63,6 @@ export const createCategories = (
 
 export const getNavbarLinks = (role: string): NavbarLinks[] => {
   const l1: NavbarLinks = { text: "Home", linkTo: "/" };
-  const l2: NavbarLinks = { text: "Sign In", linkTo: "/login" };
   const l3: NavbarLinks = { text: "Create account", linkTo: "/signup" };
   const l4: NavbarLinks = { text: "Products", linkTo: "/products" };
   const l5: NavbarLinks = { text: "My orders", linkTo: "/my-orders" };
@@ -77,7 +76,7 @@ export const getNavbarLinks = (role: string): NavbarLinks[] => {
   } else if (role === "Admin") {
     return [l7, l8, l9, l10];
   }
-  return [l1, l2, l3];
+  return [l1, l3];
 };
 
 export const getClothesSizes = () => {

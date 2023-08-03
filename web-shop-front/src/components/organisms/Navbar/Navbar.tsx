@@ -1,25 +1,36 @@
-import { useRef } from "react";
+import { useState } from "react";
 import NavbarLinks from "../../../models/NavbarLinks";
-import NavButtons from "../../molecules/NavButtons/NavButtons";
-import "./Navbar.css";
+import NavbarFull from "../../molecules/NavbarFull/NavbarFull";
+import NavbarMobile from "../../molecules/NavbarMobile/NavbarMobile";
 
 interface NavbarProps {
   navbarLinks: NavbarLinks[];
 }
 
 const Navbar = ({ navbarLinks }: NavbarProps) => {
-  const navRef = useRef<HTMLDivElement>();
-
-  const showNavbar = () => {
-    if (navRef.current) {
-      navRef.current.classList.toggle("responsive_nav");
-    }
-  };
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <header className="font-sans flex items-center justify-between h-20 py-0 px-8 bg-[#232f3e] text-[#eee]">
-      <h3 className="font-sans">Sport equipment shop</h3>
-      <NavButtons navRef={navRef} showNavbar={showNavbar} links={navbarLinks} />
+    <header className="bg-[#232f3e]">
+      <nav
+        className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8"
+        aria-label="Global"
+      >
+        <div className="flex lg:flex-1">
+          <h1 className="font-bold uppercase text-white">
+            Sports equipment shop
+          </h1>
+        </div>
+        <NavbarFull
+          navbarLinks={navbarLinks}
+          setMobileMenuOpen={setMobileMenuOpen}
+        />
+      </nav>
+      <NavbarMobile
+        mobileMenuOpen={mobileMenuOpen}
+        navbarLinks={navbarLinks}
+        setMobileMenuOpen={setMobileMenuOpen}
+      />
     </header>
   );
 };
