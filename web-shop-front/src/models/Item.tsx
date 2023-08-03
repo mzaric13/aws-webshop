@@ -48,6 +48,11 @@ export interface UpdateItem {
   tagIds: number[];
 }
 
+export interface ReturnByIdItem {
+  statusCode: number;
+  body: Item;
+}
+
 interface Item {
   id: number;
   name: string;
