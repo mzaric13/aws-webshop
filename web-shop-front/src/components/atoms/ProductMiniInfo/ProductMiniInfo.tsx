@@ -11,7 +11,7 @@ const ProductMiniInfo = ({ product }: ProductMiniInfoProps) => {
     <React.Fragment>
       <div>
         <h3 className="text-sm text-gray-700">
-          <Link to={`/products/${product.id}`}>
+          <Link to={`/product/${product.id}`}>
             <span aria-hidden="true" className="absolute inset-0" />
             {product.name}
           </Link>

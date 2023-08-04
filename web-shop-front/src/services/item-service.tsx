@@ -2,6 +2,7 @@ import axios from "axios";
 import Brand from "../models/Brand";
 import Item, {
   ItemCreation,
+  ReturnByIdItem,
   ReturnValueItemAdditionalData,
   ReturnValueItems,
   UpdateItem,
@@ -48,4 +49,8 @@ export const getAdditionalItemData = (items: Item[]) => {
 
 export const updateItem = (updateItem: UpdateItem) => {
   return axios.put<SignUpReturnValue>(`${baseUrl}/items`, updateItem);
+};
+
+export const getItemById = (id: number) => {
+  return axios.get<ReturnByIdItem>(`${baseUrl}/items/${id}`);
 };
