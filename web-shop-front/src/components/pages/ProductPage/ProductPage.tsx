@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import { useShoppingCart } from "../../../context/ShoppingCartContext";
 import Item, { ItemAdditionalData } from "../../../models/Item";
 import {
   getAdditionalItemData,
@@ -14,6 +15,7 @@ import ProductInfoSection from "../../organisms/ProductInfoSection/ProductInfoSe
 
 const ProductPage = () => {
   const { itemId } = useParams();
+  const { addToCart } = useShoppingCart();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [quantity, setQuantity] = useState<number>(1);
   const [itemBasicData, setItemBasicData] = useState<Item>({
@@ -66,7 +68,7 @@ const ProductPage = () => {
   };
 
   const handleAddToCartClick = (event: React.MouseEvent<HTMLElement>) => {
-    console.log("Add to cart");
+    addToCart(itemBasicData, chosenSize, quantity);
     event.preventDefault();
   };
 
