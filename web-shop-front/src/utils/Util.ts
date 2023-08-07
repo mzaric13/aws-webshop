@@ -1,6 +1,8 @@
 import Brand from "../models/Brand";
 import CategoryValues, { ValueC } from "../models/CategoryValues";
 import NavbarLinks from "../models/NavbarLinks";
+import { OrderItem } from "../models/Order";
+import { ShoppingCartItem } from "../models/ShoppingCart";
 import SortOption from "../models/SortOption";
 import Tag from "../models/Tag";
 
@@ -110,4 +112,18 @@ export const getShoesSizes = () => {
     { name: "48" },
     { name: "49" },
   ];
+};
+
+export const createOrderItems = (cartItems: ShoppingCartItem[]) => {
+  let orderItems: OrderItem[] = [];
+  for (let cartItem of cartItems) {
+    const orderItem: OrderItem = {
+      itemId: cartItem.item.id,
+      itemSize: cartItem.itemSize ? cartItem.itemSize : "",
+      price: cartItem.quantity * cartItem.item.price,
+      quantity: cartItem.quantity,
+    };
+    orderItems.push(orderItem);
+  }
+  return orderItems;
 };

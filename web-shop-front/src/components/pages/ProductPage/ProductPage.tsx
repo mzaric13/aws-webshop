@@ -68,8 +68,12 @@ const ProductPage = () => {
   };
 
   const handleAddToCartClick = (event: React.MouseEvent<HTMLElement>) => {
-    addToCart(itemBasicData, chosenSize, quantity);
-    event.preventDefault();
+    if (itemBasicData.itemTypeId !== 3 && chosenSize === "") {
+      toast.info("Size is not selected", { position: "top-right" });
+    } else {
+      addToCart(itemBasicData, chosenSize, quantity);
+      event.preventDefault();
+    }
   };
 
   return (

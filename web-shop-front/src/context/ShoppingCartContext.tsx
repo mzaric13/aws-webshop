@@ -16,6 +16,7 @@ interface ShoppingCartContext {
   addToCart: (newITem: Item, size: string, quantity: number) => void;
   decreaseCartQuantity: (id: number) => void;
   removeFromCart: (id: number) => void;
+  emptyCart: () => void;
   cartQuantity: number;
   cartItems: ShoppingCartItem[];
 }
@@ -90,6 +91,10 @@ export const ShoppingCartProvider = ({
     });
   };
 
+  const emptyCart = () => {
+    setCartItems([]);
+  };
+
   return (
     <ShoppingCartContext.Provider
       value={{
@@ -99,6 +104,7 @@ export const ShoppingCartProvider = ({
         removeFromCart,
         openCart,
         closeCart,
+        emptyCart,
         cartItems,
         cartQuantity,
       }}

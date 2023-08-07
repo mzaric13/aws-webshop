@@ -12,7 +12,7 @@ class ItemAvailability:
     def to_json(self):
         data = {
             'numberOfItemsLeft': self.number_of_items_left,
-            'item_size': self.item_size if self.item_size is not None else 'All',
+            'itemSize': self.item_size if self.item_size is not None else 'All',
         }
         return data
 
