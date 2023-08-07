@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { useShoppingCart } from "../../../context/ShoppingCartContext";
 
 const ShoppingCartFooter = () => {
-  const { cartItems } = useShoppingCart();
+  const { cartItems, closeCart } = useShoppingCart();
 
   const calculatePrice = (): number => {
     let price = 0;
@@ -21,6 +21,7 @@ const ShoppingCartFooter = () => {
         <Link
           to="/checkout"
           className="flex items-center justify-center rounded-md border border-transparent bg-[#232f3e] px-6 py-3 text-base font-medium text-white shadow-sm"
+          onClick={() => closeCart()}
         >
           Checkout
         </Link>
