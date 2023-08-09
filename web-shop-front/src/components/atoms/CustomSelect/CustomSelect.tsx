@@ -4,7 +4,7 @@ interface CustomSelectProps {
   isMulti: boolean;
   name: string;
   selectOptions?: any[];
-  onChange: (i: any) => void;
+  onChange?: (i: any) => void;
   selectedValue: any;
 }
 
