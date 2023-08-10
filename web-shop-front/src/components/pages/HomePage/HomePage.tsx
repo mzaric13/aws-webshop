@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import ResponsivePagination from "react-responsive-pagination";
 import { toast } from "react-toastify";
 import Brand from "../../../models/Brand";
 import CategoryValues from "../../../models/CategoryValues";
@@ -16,6 +15,7 @@ import {
   getNavbarLinks,
   getSortOptions,
 } from "../../../utils/Util";
+import Pagination from "../../molecules/Pagination/Pagination";
 import LoadingSpinner from "../../organisms/LoadingSpinner/LoadingSpinner";
 import Navbar from "../../organisms/Navbar/Navbar";
 import Products from "../../organisms/Products/Products";
@@ -237,6 +237,22 @@ const HomePage = () => {
       });
   };
 
+  const handleClick = (number: string) => {
+    if (
+      (number === "Previous" && page === 1) ||
+      (number === "Next" &&
+        page === Math.ceil(numberOfProductsForFilter / pageSize))
+    ) {
+      return;
+    } else {
+      let newPage: number = 0;
+      if (number === "Previous") newPage = page - 1;
+      else if (number === "Next") newPage = page + 1;
+      else newPage = Number(number);
+      handlePageClick(newPage);
+    }
+  };
+
   const resetCategories = () => {
     for (let category of categories) {
       for (let value of category.values) value.checked = false;
@@ -299,13 +315,12 @@ const HomePage = () => {
                           {noItemsText}
                         </h2>
                         <Products products={products} />
-                        <ResponsivePagination
-                          current={page}
-                          total={Math.ceil(
+                        <Pagination
+                          page={page}
+                          numberOfPages={Math.ceil(
                             numberOfProductsForFilter / pageSize
                           )}
-                          onPageChange={handlePageClick}
-                          className="grid grid-cols-10 mt-11"
+                          onPageClick={handleClick}
                         />
                       </div>
                     </div>

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import ResponsivePagination from "react-responsive-pagination";
 import { OrderReturnValue } from "../../../models/Order";
 import {
   changeOrderStatus,
@@ -7,6 +6,7 @@ import {
 } from "../../../services/order-service";
 import { getNavbarLinks } from "../../../utils/Util";
 import OrderDetails from "../../molecules/OrderDetails/OrderDetails";
+import Pagination from "../../molecules/Pagination/Pagination";
 import LoadingSpinner from "../../organisms/LoadingSpinner/LoadingSpinner";
 import Modal from "../../organisms/Modal/Modal";
 import Navbar from "../../organisms/Navbar/Navbar";
@@ -59,6 +59,21 @@ const OrderHistoryPage = () => {
       .catch((err) => {
         console.log(err);
       });
+  };
+
+  const handleClick = (number: string) => {
+    if (
+      (number === "Previous" && page === 1) ||
+      (number === "Next" && page === Math.ceil(numberOfOrders / pageSize))
+    ) {
+      return;
+    } else {
+      let newPage: number = 0;
+      if (number === "Previous") newPage = page - 1;
+      else if (number === "Next") newPage = page + 1;
+      else newPage = Number(number);
+      handlePageClick(newPage);
+    }
   };
 
   const handleDetailsClick = (orderId: number) => {
@@ -115,11 +130,10 @@ const OrderHistoryPage = () => {
               handleButtonClick={handleButtonClick}
             />
             <div className="col-start-2 col-span-4">
-              <ResponsivePagination
-                current={page}
-                total={Math.ceil(numberOfOrders / pageSize)}
-                onPageChange={handlePageClick}
-                className="grid grid-cols-10 mt-11"
+              <Pagination
+                page={page}
+                numberOfPages={Math.ceil(numberOfOrders / pageSize)}
+                onPageClick={handleClick}
               />
             </div>
           </div>

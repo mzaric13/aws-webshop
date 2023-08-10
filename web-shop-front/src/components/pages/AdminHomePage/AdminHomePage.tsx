@@ -1,5 +1,4 @@
 import React, { FormEvent, useEffect, useState } from "react";
-import ResponsivePagination from "react-responsive-pagination";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Brand from "../../../models/Brand";
@@ -14,6 +13,7 @@ import {
 import { getAllTags } from "../../../services/tag-service";
 import { getNavbarLinks } from "../../../utils/Util";
 import { validateUpdateItemData } from "../../../utils/Validator";
+import Pagination from "../../molecules/Pagination/Pagination";
 import AdminPagesHeader from "../../organisms/AdminPagesHeader/AdminPagesHeader";
 import EditItem from "../../organisms/EditItem/EditItem";
 import LoadingSpinner from "../../organisms/LoadingSpinner/LoadingSpinner";
@@ -111,6 +111,21 @@ const AdminHomePage = () => {
         setIsLoading(false);
         toast.error("Items not read");
       });
+  };
+
+  const handleClick = (number: string) => {
+    if (
+      (number === "Previous" && page === 1) ||
+      (number === "Next" && page === Math.ceil(numberOfItems / pageSize))
+    ) {
+      return;
+    } else {
+      let newPage: number = 0;
+      if (number === "Previous") newPage = page - 1;
+      else if (number === "Next") newPage = page + 1;
+      else newPage = Number(number);
+      handlePageClick(newPage);
+    }
   };
 
   const handleAddButtonClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -268,11 +283,10 @@ const AdminHomePage = () => {
           <div className="grid grid-cols-6 overflow-auto rounded-lg">
             <ProductsTable items={products} onClick={handleEditClick} />
             <div className="col-start-2 col-span-4">
-              <ResponsivePagination
-                current={page}
-                total={Math.ceil(numberOfItems / pageSize)}
-                onPageChange={handlePageClick}
-                className="grid grid-cols-10 mt-11"
+              <Pagination
+                page={page}
+                numberOfPages={Math.ceil(numberOfItems / pageSize)}
+                onPageClick={handleClick}
               />
             </div>
           </div>
