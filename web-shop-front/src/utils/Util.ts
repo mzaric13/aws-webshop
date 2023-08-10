@@ -1,7 +1,7 @@
 import Brand from "../models/Brand";
 import CategoryValues, { ValueC } from "../models/CategoryValues";
 import NavbarLinks from "../models/NavbarLinks";
-import { OrderItem } from "../models/Order";
+import { OrderItem, OrderStatus } from "../models/Order";
 import { ShoppingCartItem } from "../models/ShoppingCart";
 import SortOption from "../models/SortOption";
 import Tag from "../models/Tag";
@@ -126,4 +126,16 @@ export const createOrderItems = (cartItems: ShoppingCartItem[]) => {
     orderItems.push(orderItem);
   }
   return orderItems;
+};
+
+export const getSelectStatusOptions = (
+  orderStatus: string,
+  orderStatuses: OrderStatus[]
+) => {
+  if (orderStatus === "ACCEPTED") {
+    return orderStatuses.filter(
+      (os) => os.name === "SHIPPED" || os.name === "DECLINED"
+    );
+  }
+  return [];
 };
