@@ -1,11 +1,17 @@
-import React, { useEffect, useState } from "react";
+import console from "console";
+import React, { FormEvent, useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import {
   PriceList,
   PriceListCreation,
   PriceListItem,
   PriceListUpdate,
 } from "../../../models/PriceList";
-import { getPriceLists } from "../../../services/price-list-service";
+import {
+  addPriceList,
+  getPriceLists,
+  updatePriceList,
+} from "../../../services/price-list-service";
 import { getNavbarLinks } from "../../../utils/Util";
 import Pagination from "../../molecules/Pagination/Pagination";
 import AdminPagesHeader from "../../organisms/AdminPagesHeader/AdminPagesHeader";
@@ -161,6 +167,35 @@ const AdminPriceListsPage = () => {
     setIsAdd(true);
   };
 
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    if (isAdd) {
+      addPriceList(newPriceList)
+        .then((res) => {
+          if (res.data.statusCode === 200) {
+            setIsAdd(false);
+            setShowModal(false);
+            toast.success(res.data.body);
+          } else {
+            toast.error(res.data.body);
+          }
+        })
+        .catch((err) => console.log(err));
+    } else {
+      updatePriceList(pricesToUpdate)
+        .then((res) => {
+          if (res.data.statusCode === 200) {
+            setIsAdd(false);
+            setShowModal(false);
+            toast.success(res.data.body);
+          } else {
+            toast.error(res.data.body);
+          }
+        })
+        .catch((err) => console.log(err));
+    }
+    event.preventDefault();
+  };
+
   return (
     <React.Fragment>
       {isLoading ? (
@@ -196,6 +231,7 @@ const AdminPriceListsPage = () => {
                 priceList={isAdd ? newPriceList : selectedPriceList}
                 isAdd={isAdd}
                 handleInputChange={handleInputChange}
+                handleSubmit={handleSubmit}
               />
             </Modal>
           ) : (

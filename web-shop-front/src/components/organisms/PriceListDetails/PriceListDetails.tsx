@@ -1,4 +1,5 @@
 import moment from "moment";
+import { FormEvent } from "react";
 import { PriceList, PriceListCreation } from "../../../models/PriceList";
 import Button from "../../atoms/Button/Button";
 import FormField from "../../molecules/FormField/FormField";
@@ -7,15 +8,17 @@ interface PriceListDetailsProps {
   isAdd: boolean;
   priceList: PriceList | PriceListCreation;
   handleInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  handleSubmit: (event: FormEvent<HTMLFormElement>) => void;
 }
 
 const PriceListDetails = ({
   isAdd,
   priceList,
   handleInputChange,
+  handleSubmit,
 }: PriceListDetailsProps) => {
   return (
-    <form>
+    <form onSubmit={handleSubmit}>
       <div className="p-6 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
         <FormField
           text="Valid to"
