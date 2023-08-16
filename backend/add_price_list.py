@@ -97,9 +97,8 @@ def write_price_lists_items(conn, price_list_id, price_list_items_ids):
         return False
     
 def lambda_handler(event, context):
-    secret_string_paypal = eval(get_secrets_manager_credentials("dev/WebShop/PayPalNewCred"))
     secret_string_db = get_secrets_manager_credentials("dev/WebShop/PostgreSQL")
-    if secret_string_paypal and secret_string_db:
+    if secret_string_db:
         price_list_creation = transform_event(event)
         conn = get_connection(secret_string_db)
         if set_current_price_list_to_be_invalid(conn) == False:
