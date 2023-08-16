@@ -71,7 +71,7 @@ export const getNavbarLinks = (role: string): NavbarLinks[] => {
   const l6: NavbarLinks = { text: "My account", linkTo: "/account" };
   const l7: NavbarLinks = { text: "Products", linkTo: "/admin-products" };
   const l8: NavbarLinks = { text: "Orders", linkTo: "/admin-orders" };
-  const l9: NavbarLinks = { text: "Users", linkTo: "/admin-users" };
+  const l9: NavbarLinks = { text: "Price list", linkTo: "/admin-price-lists" };
   const l10: NavbarLinks = { text: "Reports", linkTo: "/admin-reports" };
   if (role === "User") {
     return [l4, l5, l6];

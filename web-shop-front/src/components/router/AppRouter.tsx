@@ -2,6 +2,7 @@ import { Route, Routes } from "react-router-dom";
 import AddItemPage from "../pages/AddItemPage/AddItemPage";
 import AdminHomePage from "../pages/AdminHomePage/AdminHomePage";
 import AdminOrdersPage from "../pages/AdminOrdersPage/AdminOrdersPage";
+import AdminPriceListsPage from "../pages/AdminPriceListsPage/AdminPriceListsPage";
 import CheckoutPage from "../pages/CheckoutPage/CheckoutPage";
 import HomePage from "../pages/HomePage/HomePage";
 import OrderHistoryPage from "../pages/OrderHistoryPage/OrderHistoryPage";
@@ -21,6 +22,7 @@ const AppRouter = () => {
       <Route path="/checkout" element={<CheckoutPage />} />
       <Route path="/payment-success" element={<PaymentStatusPage />} />
       <Route path="/admin-orders" element={<AdminOrdersPage />} />
+      <Route path="/admin-price-lists" element={<AdminPriceListsPage />} />
       <Route path="/orders-history" element={<OrderHistoryPage />} />
     </Routes>
   );

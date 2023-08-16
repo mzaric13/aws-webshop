@@ -30,7 +30,7 @@ const Pagination = ({ page, numberOfPages, onPageClick }: PaginationProps) => {
   };
 
   return (
-    <div className="flex items-center justify-center mt-8 border-t-2 border-gray-200 bg-white px-4 py-3 sm:px-6">
+    <div className="flex items-center justify-center border-t-2 border-gray-200 bg-white px-4 py-3 sm:px-6">
       <div>
         <div
           className="isolate inline-flex -space-x-px rounded-md shadow-sm"
