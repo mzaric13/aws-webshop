@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { OrderReturnValue } from "../../../models/Order";
+import { OrderReturnValue, OrderStatus } from "../../../models/Order";
 import {
   changeOrderStatus,
+  getOrderStatuses,
   getOrdersUser,
 } from "../../../services/order-service";
 import { getNavbarLinks } from "../../../utils/Util";
@@ -18,6 +19,7 @@ const OrderHistoryPage = () => {
   const [orders, setOrders] = useState<OrderReturnValue[]>([]);
   const [page, setPage] = useState<number>(1);
   const [showModal, setShowModal] = useState<boolean>(false);
+  const [orderStatuses, setOrderStatuses] = useState<OrderStatus[]>([]);
   const [numberOfOrders, setNumberOfOrders] = useState<number>(0);
   const [selectedOrder, setSelectedOrder] = useState<OrderReturnValue>({
     id: -1,
@@ -30,6 +32,13 @@ const OrderHistoryPage = () => {
 
   useEffect(() => {
     sessionStorage.setItem("role", "User");
+    getOrderStatuses()
+      .then((res) => {
+        if (res.data.statusCode === 200) {
+          setOrderStatuses([...res.data.body]);
+        }
+      })
+      .catch((err) => console.log(err));
     getOrdersUser(2, page, pageSize)
       .then((res) => {
         if (res.data.statusCode === 200) {
@@ -97,7 +106,10 @@ const OrderHistoryPage = () => {
   };
 
   const handleButtonClick = (orderId: number) => {
-    changeOrderStatus(orderId, 4)
+    const status = orderStatuses.filter(
+      (status) => status.name === "RECIEVED"
+    )[0];
+    changeOrderStatus(orderId, status.id, status.name)
       .then((res) => {
         if (res.data.statusCode === 200) {
           let order = orders.filter((ord) => ord.id === orderId)[0];

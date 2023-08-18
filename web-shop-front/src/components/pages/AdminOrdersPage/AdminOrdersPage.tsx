@@ -111,7 +111,7 @@ const AdminOrdersPage = () => {
     orderStatus: OrderStatus,
     orderId: number
   ) => {
-    changeOrderStatus(orderId, orderStatus.id)
+    changeOrderStatus(orderId, orderStatus.id, orderStatus.name)
       .then((res) => {
         if (res.data.statusCode === 200) {
           let order = orders.filter((ord) => ord.id === orderId)[0];

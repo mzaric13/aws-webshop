@@ -33,10 +33,15 @@ export const getOrdersAdmin = (page: number, pageSize: number) => {
   );
 };
 
-export const changeOrderStatus = (orderId: number, statusId: number) => {
+export const changeOrderStatus = (
+  orderId: number,
+  statusId: number,
+  statusName: string
+) => {
   return axios.put<{ statusCode: number; body: string }>(`${baseUrl}/orders`, {
     orderId,
     statusId,
+    statusName,
   });
 };
 
