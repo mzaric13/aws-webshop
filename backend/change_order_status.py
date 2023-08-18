@@ -6,6 +6,7 @@ import paypalrestsdk
 from paypalrestsdk import Sale
 
 secrets_manager_client = boto3.client('secretsmanager', region_name='eu-north-1')
+lambda_client = boto3.client('lambda', region_name='eu-north-1')
 
 def get_secrets_manager_credentials(secret_name):
     try:
@@ -66,6 +67,18 @@ def update_order(conn, order_id, status_id):
         return price, payment_id
     except Exception as e:
         return False, False
+        
+def send_email(order_id, status):
+    try:
+        response = lambda_client.invoke(
+            FunctionName='arn:aws:lambda:eu-north-1:232513253020:function:SendOrderStatusEmail',
+            InvocationType='RequestResponse',
+            Payload=json.dumps({'orderId': order_id, 'currentStatus': status})
+        )
+        json_data = json.loads(response['Payload'].read())
+        return json_data
+    except Exception as e:
+        return False
     
 def lambda_handler(event, context):
     secret_string_paypal = eval(get_secrets_manager_credentials("dev/WebShop/PayPalNewCred"))
@@ -78,6 +91,7 @@ def lambda_handler(event, context):
         price, payment_id = update_order(connection, order_id, status_id)
         if price != False:
             connection.close()
+            send_email(order_id, status_name)
             if status_name == "DECLINED":
                 status = refund_money(secret_string_paypal['PayPalCLiendID'], secret_string_paypal['PayPalClientSecret'], payment_id, price)
                 if status:
@@ -88,11 +102,11 @@ def lambda_handler(event, context):
                 else:
                     return {
                         'statusCode': 500,
-                        'body': "Erro refunding money"
+                        'body': "Erro refunding mone"
                     }
             return {
                 'statusCode': 200,
-                'body': "Order status successfully changed"
+                'body': "Successfully changed order status"
             }
         else:
             connection.close()

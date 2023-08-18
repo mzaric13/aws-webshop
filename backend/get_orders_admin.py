@@ -18,34 +18,41 @@ class Item:
             "id": self.item_id,
             "name": self.item_name,
             "price": self.price,
-            "pictures": self.item_pictures
         }
         return data
 
 class OrderItem:
-    def __init__(self, quantity, item) -> None:
+    def __init__(self, quantity, item, item_size) -> None:
         self.quantity = quantity
         self.item = item
+        self.item_size = item_size
 
     def to_json(self):
         data = {
             "quantity": self.quantity,
-            "item": self.item.to_json()
+            "item": self.item.to_json(),
+            "itemSize": self.item_size
         }
         return data
 
 class Order:
-    def __init__(self, price, date, order_items) -> None:
+    def __init__(self, id, price, date, order_items, status, email) -> None:
+        self.id = id
         self.price = price
         self.date = date
         self.order_items = order_items
+        self.status = status
+        self.email = email
 
     def to_json(self):
         order_items = list(map(lambda x: x.to_json(), self.order_items))
         data = {
+            "id": self.id,
             "price": self.price,
             "date": self.date.isoformat(),
-            "orderItems": order_items
+            "orderItems": order_items,
+            "status": self.status,
+            "userEmail": self.email
         }
         return data    
     
@@ -70,7 +77,7 @@ def get_connection(secret_string):
 
 def get_orders_for_user(conn, page, page_size):
     try:
-        query = sql.SQL("SELECT ord.id, ord.date, ord.price, json_agg(json_build_object('item_id', oi.item_id, 'quantity', oi.quantity, 'price', oi.price, 'name', it.name)) FROM orders ord INNER JOIN orders_order_items ooi ON ord.id = ooi.order_id INNER JOIN order_items oi ON ooi.order_item_id = oi.id INNER JOIN items it ON oi.item_id = it.id GROUP BY ord.id, ord.date, ord.price LIMIT %s OFFSET %s")
+        query = sql.SQL("SELECT ord.id, ord.date, ord.price, json_agg(json_build_object('item_id', oi.item_id, 'quantity', oi.quantity, 'price', oi.price, 'name', it.name, 'status', ords.name, 'email', usr.email, 'item_size', oi.item_size)) FROM orders ord INNER JOIN orders_order_items ooi ON ord.id = ooi.order_id INNER JOIN order_items oi ON ooi.order_item_id = oi.id INNER JOIN items it ON oi.item_id = it.id INNER JOIN order_statuses ords ON ord.status_id = ords.id INNER JOIN users usr ON ord.user_id = usr.id GROUP BY ord.id, ord.date, ord.price ORDER BY ord.id ASC LIMIT %s OFFSET %s")
         cursor = conn.cursor()
         offset = (page - 1) * page_size
         cursor.execute(query, (page_size, offset,))
@@ -96,8 +103,8 @@ def transform_orders(orders_db):
     for order_db in orders_db:
         order_items = []
         for order_item_db in order_db[3]:
-            order_items.append(OrderItem(int(order_item_db['quantity']), Item(int(order_item_db['item_id']), order_item_db['name'], float(order_item_db['price']), [])))
-        order = Order(order_db[2], order_db[1], order_items)
+            order_items.append(OrderItem(int(order_item_db['quantity']), Item(int(order_item_db['item_id']), order_item_db['name'], float(order_item_db['price']), []), order_item_db['item_size']))
+        order = Order(order_db[0], order_db[2], order_db[1], order_items, order_item_db['status'], order_item_db['email'])
         orders.append(order.to_json())
     return orders
     

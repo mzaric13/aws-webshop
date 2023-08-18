@@ -58,7 +58,7 @@ const AdminOrdersPage = () => {
   const handlePageClick = (newPage: number) => {
     setPage(newPage);
     setIsLoading(true);
-    getOrdersAdmin(page, pageSize)
+    getOrdersAdmin(newPage, pageSize)
       .then((res) => {
         if (res.data.statusCode === 200) {
           setOrders(res.data.body.orders);

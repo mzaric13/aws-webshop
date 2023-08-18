@@ -56,7 +56,7 @@ const OrderHistoryPage = () => {
   const handlePageClick = (newPage: number) => {
     setPage(newPage);
     setIsLoading(true);
-    getOrdersUser(2, page, pageSize)
+    getOrdersUser(2, newPage, pageSize)
       .then((res) => {
         if (res.data.statusCode === 200) {
           setOrders(res.data.body.orders);
