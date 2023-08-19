@@ -76,6 +76,10 @@ def singup_user(event, client_id):
                 {
                     'Name': 'address',
                     'Value': event['address']
+                },
+                {
+                    'Name': 'custom:role',
+                    'Value': 'USER'
                 }
             ]
         )
