@@ -90,7 +90,7 @@ const CheckoutPage = () => {
         <LoadingSpinner />
       ) : (
         <React.Fragment>
-          <Navbar navbarLinks={getNavbarLinks("User")} />
+          <Navbar navbarLinks={getNavbarLinks("USER")} />
           <div className="container p-12 mx-auto">
             <div className="flex flex-col w-full px-0 mx-auto md:flex-row">
               <div className="flex flex-col md:w-full">

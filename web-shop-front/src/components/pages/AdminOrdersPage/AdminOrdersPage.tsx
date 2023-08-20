@@ -134,7 +134,7 @@ const AdminOrdersPage = () => {
         <LoadingSpinner />
       ) : (
         <React.Fragment>
-          <Navbar navbarLinks={getNavbarLinks("Admin")} />
+          <Navbar navbarLinks={getNavbarLinks("ADMIN")} />
           <div className="mt-10 grid grid-cols-6 overflow-auto rounded-lg">
             <OrdersTable
               orders={orders}

@@ -274,7 +274,7 @@ const AdminHomePage = () => {
         <LoadingSpinner />
       ) : (
         <React.Fragment>
-          <Navbar navbarLinks={getNavbarLinks("Admin")} />
+          <Navbar navbarLinks={getNavbarLinks("ADMIN")} />
           <AdminPagesHeader
             text="Products"
             handleClick={handleAddButtonClick}

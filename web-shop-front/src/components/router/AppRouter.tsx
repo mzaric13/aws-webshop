@@ -1,4 +1,5 @@
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
+import { configuteAxios } from "../../services/axios-config";
 import AddItemPage from "../pages/AddItemPage/AddItemPage";
 import AdminHomePage from "../pages/AdminHomePage/AdminHomePage";
 import AdminOrdersPage from "../pages/AdminOrdersPage/AdminOrdersPage";
@@ -15,6 +16,8 @@ import SharedRoutes from "./SharedRoutes";
 import UserRoutes from "./UserRoutes";
 
 const AppRouter = () => {
+  const navigate = useNavigate();
+  configuteAxios(navigate);
   return (
     <Routes>
       <Route element={<SharedRoutes />}>

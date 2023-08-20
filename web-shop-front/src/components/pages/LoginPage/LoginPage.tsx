@@ -1,6 +1,7 @@
 import jwtDecode from "jwt-decode";
 import { FormEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import { login } from "../../../services/auth-service";
 import { setToken } from "../../../services/token-service";
 import LoginForm from "../../organisms/LoginForm/LoginForm";
@@ -25,9 +26,13 @@ const LoginPage = () => {
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     login({ email: formData.email, password: formData.password })
       .then((res) => {
-        const decodedToken: any = jwtDecode(res.data.body.idToken);
-        const navigateUrl = setToken(res.data.body.idToken, decodedToken);
-        navigate(navigateUrl);
+        if (res.data.statusCode === 200) {
+          const decodedToken: any = jwtDecode(res.data.body.idToken);
+          const navigateUrl = setToken(res.data.body.idToken, decodedToken);
+          navigate(navigateUrl);
+        } else {
+          toast.error("Wrong credentials!");
+        }
       })
       .catch((err) => console.log(err));
     event.preventDefault();

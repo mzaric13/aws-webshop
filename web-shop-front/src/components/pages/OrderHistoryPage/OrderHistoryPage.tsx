@@ -132,7 +132,7 @@ const OrderHistoryPage = () => {
         <LoadingSpinner />
       ) : (
         <React.Fragment>
-          <Navbar navbarLinks={getNavbarLinks("User")} />
+          <Navbar navbarLinks={getNavbarLinks("USER")} />
           <div className="mt-10 grid grid-cols-6 overflow-auto rounded-lg">
             <OrdersTable
               orders={orders}
