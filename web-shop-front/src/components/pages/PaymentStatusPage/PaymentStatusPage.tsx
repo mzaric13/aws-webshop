@@ -6,7 +6,7 @@ import Navbar from "../../organisms/Navbar/Navbar";
 const PaymentStatusPage = () => {
   return (
     <React.Fragment>
-      <Navbar navbarLinks={getNavbarLinks("User")} />
+      <Navbar navbarLinks={getNavbarLinks("USER")} />
       <div className="bg-gray-100 h-screen">
         <div className="bg-white p-6  md:mx-auto">
           <svg

@@ -174,7 +174,6 @@ const AddItemPage = () => {
   };
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    console.log(formData);
     const message = validateItemData(formData);
     if (message === "Success") {
       const itemCreation: ItemCreation = {
@@ -212,7 +211,7 @@ const AddItemPage = () => {
         <LoadingSpinner />
       ) : (
         <React.Fragment>
-          <Navbar navbarLinks={getNavbarLinks("Admin")} />
+          <Navbar navbarLinks={getNavbarLinks("ADMIN")} />
           <form onSubmit={handleSubmit}>
             <div className="items-center justify-center px-6 py-8 mt-10 mx-60 md:h-min lg:py-0">
               <div className="border-b-2 border-gray-900/10 pb-12">

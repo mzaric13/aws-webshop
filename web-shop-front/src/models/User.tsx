@@ -3,7 +3,7 @@ export interface SignUpReturnValue {
   message: string;
 }
 
-export default interface User {
+export interface UserCreation {
   username: string;
   password: string;
   givenName: string;
@@ -11,4 +11,14 @@ export default interface User {
   birthdate: string;
   phoneNumber: string;
   address: string;
+}
+
+export interface User {
+  id: number;
+  email: string;
+  givenName: string;
+  familyName: string;
+  address: string;
+  phoneNumber: string;
+  birthdate: Date;
 }

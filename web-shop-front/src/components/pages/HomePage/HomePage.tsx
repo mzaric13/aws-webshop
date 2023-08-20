@@ -10,6 +10,7 @@ import { getAllBrands } from "../../../services/brand-service";
 import { getAllItems } from "../../../services/item-service";
 import { getAllItemTypes } from "../../../services/item-types-service";
 import { getAllTags } from "../../../services/tag-service";
+import { getRole } from "../../../services/token-service";
 import {
   createCategories,
   getNavbarLinks,
@@ -266,7 +267,9 @@ const HomePage = () => {
         <LoadingSpinner />
       ) : (
         <React.Fragment>
-          <Navbar navbarLinks={getNavbarLinks("")} />
+          <Navbar
+            navbarLinks={getNavbarLinks(getRole() as unknown as string)}
+          />
           <div className="bg-white">
             <div>
               <SidebarMobile

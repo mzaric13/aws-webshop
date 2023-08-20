@@ -82,7 +82,7 @@ const ProductPage = () => {
         <LoadingSpinner />
       ) : (
         <React.Fragment>
-          <Navbar navbarLinks={getNavbarLinks("User")} />
+          <Navbar navbarLinks={getNavbarLinks("USER")} />
           <div className="flex flex-col justify-between lg:flex-row gap-16 lg:items-center mt-36 mx-36">
             <div className="flex flex-col gap-6 lg:w-2/4">
               <ProductImageSection

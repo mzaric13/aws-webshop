@@ -144,7 +144,8 @@ def get_values_to_change_availabilities(order_items, item_additional_datas):
     values_no_size = []
     values_size = []
     for order_item in order_items:
-        item_availabilities = item_additional_datas[0]['itemAvailabilities']
+        item_availabilities = next(iad['itemAvailabilities'] for iad in item_additional_datas if iad['itemId'] == order_item.item_id)
+        #item_availabilities = item_additional_datas[0]['itemAvailabilities']
         if order_item.item_size == "":
             values_no_size.append((int(item_availabilities[0]['numberOfItemsLeft']) - order_item.quantity, order_item.item_id))
         else:

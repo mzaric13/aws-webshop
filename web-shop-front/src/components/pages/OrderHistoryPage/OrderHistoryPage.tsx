@@ -1,9 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { OrderReturnValue } from "../../../models/Order";
+import { toast } from "react-toastify";
+import { OrderReturnValue, OrderStatus } from "../../../models/Order";
+import { User } from "../../../models/User";
 import {
   changeOrderStatus,
+  getOrderStatuses,
   getOrdersUser,
 } from "../../../services/order-service";
+import { getLoggedUser } from "../../../services/user-service";
 import { getNavbarLinks } from "../../../utils/Util";
 import OrderDetails from "../../molecules/OrderDetails/OrderDetails";
 import Pagination from "../../molecules/Pagination/Pagination";
@@ -18,7 +22,17 @@ const OrderHistoryPage = () => {
   const [orders, setOrders] = useState<OrderReturnValue[]>([]);
   const [page, setPage] = useState<number>(1);
   const [showModal, setShowModal] = useState<boolean>(false);
+  const [orderStatuses, setOrderStatuses] = useState<OrderStatus[]>([]);
   const [numberOfOrders, setNumberOfOrders] = useState<number>(0);
+  const [loggedUser, setLoggedUser] = useState<User>({
+    id: -1,
+    address: ",,, ",
+    birthdate: new Date(),
+    familyName: "",
+    givenName: "",
+    email: "",
+    phoneNumber: "",
+  });
   const [selectedOrder, setSelectedOrder] = useState<OrderReturnValue>({
     id: -1,
     date: new Date(),
@@ -29,25 +43,40 @@ const OrderHistoryPage = () => {
   });
 
   useEffect(() => {
-    sessionStorage.setItem("role", "User");
-    getOrdersUser(2, page, pageSize)
+    getOrderStatuses()
       .then((res) => {
         if (res.data.statusCode === 200) {
-          setOrders(res.data.body.orders);
-          setNumberOfOrders(res.data.body.numberOfOrders);
-          setIsLoading(false);
+          setOrderStatuses([...res.data.body]);
         }
       })
-      .catch((err) => {
-        console.log(err);
-      });
+      .catch((err) => console.log(err));
+    getLoggedUser()
+      .then((res) => {
+        if (res.data.statusCode === 200) {
+          setLoggedUser(res.data.body);
+          getOrdersUser(res.data.body.id, page, pageSize)
+            .then((res) => {
+              if (res.data.statusCode === 200) {
+                setOrders(res.data.body.orders);
+                setNumberOfOrders(res.data.body.numberOfOrders);
+                setIsLoading(false);
+              }
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        } else {
+          toast.error(res.data.body as unknown as string);
+        }
+      })
+      .catch((err) => console.log(err));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handlePageClick = (newPage: number) => {
     setPage(newPage);
     setIsLoading(true);
-    getOrdersUser(2, page, pageSize)
+    getOrdersUser(loggedUser.id, newPage, pageSize)
       .then((res) => {
         if (res.data.statusCode === 200) {
           setOrders(res.data.body.orders);
@@ -97,7 +126,10 @@ const OrderHistoryPage = () => {
   };
 
   const handleButtonClick = (orderId: number) => {
-    changeOrderStatus(orderId, 4)
+    const status = orderStatuses.filter(
+      (status) => status.name === "RECIEVED"
+    )[0];
+    changeOrderStatus(orderId, status.id, status.name)
       .then((res) => {
         if (res.data.statusCode === 200) {
           let order = orders.filter((ord) => ord.id === orderId)[0];
@@ -120,7 +152,7 @@ const OrderHistoryPage = () => {
         <LoadingSpinner />
       ) : (
         <React.Fragment>
-          <Navbar navbarLinks={getNavbarLinks("User")} />
+          <Navbar navbarLinks={getNavbarLinks("USER")} />
           <div className="mt-10 grid grid-cols-6 overflow-auto rounded-lg">
             <OrdersTable
               orders={orders}

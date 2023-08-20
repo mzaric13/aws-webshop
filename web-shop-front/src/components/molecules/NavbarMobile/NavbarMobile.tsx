@@ -1,7 +1,9 @@
 import { Dialog } from "@headlessui/react";
 import { Dispatch, SetStateAction } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import NavbarLinks from "../../../models/NavbarLinks";
+import { logout } from "../../../services/auth-service";
+import { deleteToken, getAccessToken } from "../../../services/token-service";
 import NavbarButton from "../../atoms/NavbarButton/NavbarButton";
 import NavButtons from "../NavButtons/NavButtons";
 
@@ -16,6 +18,14 @@ const NavbarMobile = ({
   navbarLinks,
   setMobileMenuOpen,
 }: NavbarMobileProps) => {
+  const navigate = useNavigate();
+
+  const isLoggedIn = () => {
+    const token = getAccessToken();
+    if (!token || token === "undefined") return false;
+    return true;
+  };
+
   return (
     <Dialog
       as="div"
@@ -37,12 +47,32 @@ const NavbarMobile = ({
               <NavButtons mobile={true} links={navbarLinks} />
             </div>
             <div className="py-6">
-              <Link
-                to="/login"
-                className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-[#eee] hover:bg-[#f90]"
-              >
-                Log in
-              </Link>
+              {isLoggedIn() ? (
+                <span
+                  className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-[#eee] hover:bg-[#f90] cursor-pointer"
+                  onClick={() => {
+                    logout()
+                      .then((res) => {
+                        if (res.data.statusCode === 200) {
+                          deleteToken();
+                          navigate("/");
+                        } else {
+                          console.log(res.data);
+                        }
+                      })
+                      .catch((err) => console.log(err));
+                  }}
+                >
+                  Log out
+                </span>
+              ) : (
+                <Link
+                  to="/login"
+                  className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-[#eee] hover:bg-[#f90]"
+                >
+                  Log in
+                </Link>
+              )}
             </div>
           </div>
         </div>

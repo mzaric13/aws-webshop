@@ -31,7 +31,6 @@ const AdminOrdersPage = () => {
   });
 
   useEffect(() => {
-    sessionStorage.setItem("role", "Admin");
     getOrderStatuses()
       .then((res) => {
         if (res.data.statusCode === 200) {
@@ -58,7 +57,7 @@ const AdminOrdersPage = () => {
   const handlePageClick = (newPage: number) => {
     setPage(newPage);
     setIsLoading(true);
-    getOrdersAdmin(page, pageSize)
+    getOrdersAdmin(newPage, pageSize)
       .then((res) => {
         if (res.data.statusCode === 200) {
           setOrders(res.data.body.orders);
@@ -111,7 +110,7 @@ const AdminOrdersPage = () => {
     orderStatus: OrderStatus,
     orderId: number
   ) => {
-    changeOrderStatus(orderId, orderStatus.id)
+    changeOrderStatus(orderId, orderStatus.id, orderStatus.name)
       .then((res) => {
         if (res.data.statusCode === 200) {
           let order = orders.filter((ord) => ord.id === orderId)[0];
@@ -134,7 +133,7 @@ const AdminOrdersPage = () => {
         <LoadingSpinner />
       ) : (
         <React.Fragment>
-          <Navbar navbarLinks={getNavbarLinks("Admin")} />
+          <Navbar navbarLinks={getNavbarLinks("ADMIN")} />
           <div className="mt-10 grid grid-cols-6 overflow-auto rounded-lg">
             <OrdersTable
               orders={orders}

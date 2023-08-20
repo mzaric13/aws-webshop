@@ -67,16 +67,14 @@ export const getNavbarLinks = (role: string): NavbarLinks[] => {
   const l1: NavbarLinks = { text: "Home", linkTo: "/" };
   const l3: NavbarLinks = { text: "Create account", linkTo: "/signup" };
   const l4: NavbarLinks = { text: "Products", linkTo: "/products" };
-  const l5: NavbarLinks = { text: "My orders", linkTo: "/my-orders" };
-  const l6: NavbarLinks = { text: "My account", linkTo: "/account" };
+  const l5: NavbarLinks = { text: "My orders", linkTo: "/orders-history" };
   const l7: NavbarLinks = { text: "Products", linkTo: "/admin-products" };
   const l8: NavbarLinks = { text: "Orders", linkTo: "/admin-orders" };
   const l9: NavbarLinks = { text: "Price list", linkTo: "/admin-price-lists" };
-  const l10: NavbarLinks = { text: "Reports", linkTo: "/admin-reports" };
-  if (role === "User") {
-    return [l4, l5, l6];
-  } else if (role === "Admin") {
-    return [l7, l8, l9, l10];
+  if (role === "USER") {
+    return [l4, l5];
+  } else if (role === "ADMIN") {
+    return [l7, l8, l9];
   }
   return [l1, l3];
 };

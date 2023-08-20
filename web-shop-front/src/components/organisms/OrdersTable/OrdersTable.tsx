@@ -1,4 +1,5 @@
 import { OrderReturnValue, OrderStatus } from "../../../models/Order";
+import { getRole } from "../../../services/token-service";
 import OrdersTableRow from "../../molecules/OrdersTableRow/OrdersTableRow";
 
 interface OrdersTableProps {
@@ -20,7 +21,7 @@ const OrdersTable = ({
     <table className="mt-1 col-start-2 col-span-4 table-fixed rounded-xl">
       <thead className="bg-gray-50 border-b-4 border-gray-200">
         <tr>
-          {sessionStorage.getItem("role") === "Admin" ? (
+          {getRole() === "ADMIN" ? (
             <>
               <th className="p-3 text-sm font-semibold tracking-wide text-left">
                 Order id
@@ -42,7 +43,7 @@ const OrdersTable = ({
             Status
           </th>
           <th className="p-3 text-sm font-semibold tracking-wide text-left"></th>
-          {sessionStorage.getItem("role") === "User" ? (
+          {getRole() === "USER" ? (
             <th className="p-3 text-sm font-semibold tracking-wide text-left"></th>
           ) : (
             <></>

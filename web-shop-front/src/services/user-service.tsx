@@ -1,8 +1,13 @@
 import axios from "axios";
-import User, { SignUpReturnValue } from "../models/User";
+import { SignUpReturnValue, User, UserCreation } from "../models/User";
 import { baseUrl } from "../utils/Util";
 
-export const signUp = (user: User) => {
-  console.log("usao 1");
+export const signUp = (user: UserCreation) => {
   return axios.post<SignUpReturnValue>(`${baseUrl}/user/signup`, user);
+};
+
+export const getLoggedUser = () => {
+  return axios.get<{ statusCode: number; body: User }>(
+    `${baseUrl}/user/get-logged-user`
+  );
 };

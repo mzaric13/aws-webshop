@@ -1,4 +1,4 @@
-import User from "../../../models/User";
+import { User } from "../../../models/User";
 import FormField from "../../molecules/FormField/FormField";
 
 interface CheckoutFormFieldsProps {
@@ -34,7 +34,7 @@ const CheckoutFormFields = ({
         name="email"
         fieldType="big"
         handleInputChange={handleInputChange}
-        value={user.username}
+        value={user.email}
       />
       <FormField
         text="Phone number"

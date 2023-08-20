@@ -201,7 +201,7 @@ const AdminPriceListsPage = () => {
         <LoadingSpinner />
       ) : (
         <React.Fragment>
-          <Navbar navbarLinks={getNavbarLinks("Admin")} />
+          <Navbar navbarLinks={getNavbarLinks("ADMIN")} />
           <AdminPagesHeader
             buttonText="Add new price list"
             handleClick={handleAddButtonClick}

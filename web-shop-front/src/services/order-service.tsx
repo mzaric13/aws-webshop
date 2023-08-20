@@ -18,9 +18,12 @@ export const executePayment = (
   payerId: string,
   token: string
 ) => {
-  return axios.post<ExecuteOrderReturnValue>(
-    `${baseUrl}/orders/execute/${orderId}?paymentId=${paymentId}&PayerID=${payerId}&token=${token}`
-  );
+  return axios.post<ExecuteOrderReturnValue>(`${baseUrl}/orders/execute`, {
+    orderId: orderId,
+    PayerID: payerId,
+    paymentId: paymentId,
+    token: token,
+  });
 };
 
 export const getOrdersAdmin = (page: number, pageSize: number) => {
@@ -33,10 +36,15 @@ export const getOrdersAdmin = (page: number, pageSize: number) => {
   );
 };
 
-export const changeOrderStatus = (orderId: number, statusId: number) => {
+export const changeOrderStatus = (
+  orderId: number,
+  statusId: number,
+  statusName: string
+) => {
   return axios.put<{ statusCode: number; body: string }>(`${baseUrl}/orders`, {
     orderId,
     statusId,
+    statusName,
   });
 };
 
