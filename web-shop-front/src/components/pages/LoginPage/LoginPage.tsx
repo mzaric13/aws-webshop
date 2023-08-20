@@ -28,7 +28,11 @@ const LoginPage = () => {
       .then((res) => {
         if (res.data.statusCode === 200) {
           const decodedToken: any = jwtDecode(res.data.body.idToken);
-          const navigateUrl = setToken(res.data.body.idToken, decodedToken);
+          const navigateUrl = setToken(
+            res.data.body.idToken,
+            decodedToken,
+            res.data.body.accessToken
+          );
           navigate(navigateUrl);
         } else {
           toast.error("Wrong credentials!");

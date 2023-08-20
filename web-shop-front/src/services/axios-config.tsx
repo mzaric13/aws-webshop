@@ -1,14 +1,16 @@
 import axios from "axios";
 import { NavigateFunction } from "react-router-dom";
 import { baseUrl } from "../utils/Util";
-import { deleteToken, getToken } from "./token-service";
+import { deleteToken, getAccessToken, getIdToken } from "./token-service";
 
 export const configuteAxios = (navigate: NavigateFunction) => {
   axios.interceptors.request.use(
     (config) => {
-      const token = getToken();
+      const token = getIdToken();
       if (token) {
-        config.headers["Authorization"] = token;
+        if (config.url?.endsWith("auth/logout"))
+          config.headers["Authorization"] = getAccessToken();
+        else config.headers["Authorization"] = token;
       }
       return config;
     },
@@ -38,6 +40,7 @@ export const configuteAxios = (navigate: NavigateFunction) => {
         deleteToken();
         navigate("/");
       }
+      console.log(error);
       return Promise.reject(error);
     }
   );

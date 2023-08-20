@@ -4,7 +4,11 @@ import { FiLogIn, FiLogOut } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import NavbarLinks from "../../../models/NavbarLinks";
 import { logout } from "../../../services/auth-service";
-import { getRole, getToken } from "../../../services/token-service";
+import {
+  deleteToken,
+  getIdToken,
+  getRole,
+} from "../../../services/token-service";
 import NavbarButton from "../../atoms/NavbarButton/NavbarButton";
 import NavbarCartButton from "../../atoms/NavbarCartButton/NavbarCartButton";
 import NavButtons from "../NavButtons/NavButtons";
@@ -24,7 +28,7 @@ const NavbarFull = ({ navbarLinks, setMobileMenuOpen }: NavbarFullProps) => {
   };
 
   const isLoggedIn = () => {
-    const token = getToken();
+    const token = getIdToken();
     if (!token || token === "undefined") return false;
     return true;
   };
@@ -45,8 +49,16 @@ const NavbarFull = ({ navbarLinks, setMobileMenuOpen }: NavbarFullProps) => {
             className="m-2 text-white cursor-pointer"
             size={30}
             onClick={() => {
-              logout();
-              navigate("/");
+              logout()
+                .then((res) => {
+                  if (res.data.statusCode === 200) {
+                    deleteToken();
+                    navigate("/");
+                  } else {
+                    console.log(res.data);
+                  }
+                })
+                .catch((err) => console.log(err));
             }}
           />
         ) : (

@@ -174,7 +174,6 @@ const AddItemPage = () => {
   };
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    console.log(formData);
     const message = validateItemData(formData);
     if (message === "Success") {
       const itemCreation: ItemCreation = {

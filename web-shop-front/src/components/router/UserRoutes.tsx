@@ -1,13 +1,13 @@
 import React, { PropsWithChildren, useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
-import { getRole, getToken } from "../../services/token-service";
+import { getIdToken, getRole } from "../../services/token-service";
 
 const UserRoutes = ({ children }: PropsWithChildren) => {
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const checkUserToken = () => {
-    const userToken = getToken();
+    const userToken = getIdToken();
     if (!userToken || userToken === "undefined") {
       setIsLoggedIn(false);
       return navigate("/");

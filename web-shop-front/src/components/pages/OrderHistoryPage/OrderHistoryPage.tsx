@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import { OrderReturnValue, OrderStatus } from "../../../models/Order";
+import { User } from "../../../models/User";
 import {
   changeOrderStatus,
   getOrderStatuses,
   getOrdersUser,
 } from "../../../services/order-service";
+import { getLoggedUser } from "../../../services/user-service";
 import { getNavbarLinks } from "../../../utils/Util";
 import OrderDetails from "../../molecules/OrderDetails/OrderDetails";
 import Pagination from "../../molecules/Pagination/Pagination";
@@ -21,6 +24,15 @@ const OrderHistoryPage = () => {
   const [showModal, setShowModal] = useState<boolean>(false);
   const [orderStatuses, setOrderStatuses] = useState<OrderStatus[]>([]);
   const [numberOfOrders, setNumberOfOrders] = useState<number>(0);
+  const [loggedUser, setLoggedUser] = useState<User>({
+    id: -1,
+    address: ",,, ",
+    birthdate: new Date(),
+    familyName: "",
+    givenName: "",
+    email: "",
+    phoneNumber: "",
+  });
   const [selectedOrder, setSelectedOrder] = useState<OrderReturnValue>({
     id: -1,
     date: new Date(),
@@ -31,7 +43,6 @@ const OrderHistoryPage = () => {
   });
 
   useEffect(() => {
-    sessionStorage.setItem("role", "User");
     getOrderStatuses()
       .then((res) => {
         if (res.data.statusCode === 200) {
@@ -39,24 +50,33 @@ const OrderHistoryPage = () => {
         }
       })
       .catch((err) => console.log(err));
-    getOrdersUser(2, page, pageSize)
+    getLoggedUser()
       .then((res) => {
         if (res.data.statusCode === 200) {
-          setOrders(res.data.body.orders);
-          setNumberOfOrders(res.data.body.numberOfOrders);
-          setIsLoading(false);
+          setLoggedUser(res.data.body);
+          getOrdersUser(res.data.body.id, page, pageSize)
+            .then((res) => {
+              if (res.data.statusCode === 200) {
+                setOrders(res.data.body.orders);
+                setNumberOfOrders(res.data.body.numberOfOrders);
+                setIsLoading(false);
+              }
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        } else {
+          toast.error(res.data.body as unknown as string);
         }
       })
-      .catch((err) => {
-        console.log(err);
-      });
+      .catch((err) => console.log(err));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handlePageClick = (newPage: number) => {
     setPage(newPage);
     setIsLoading(true);
-    getOrdersUser(2, newPage, pageSize)
+    getOrdersUser(loggedUser.id, newPage, pageSize)
       .then((res) => {
         if (res.data.statusCode === 200) {
           setOrders(res.data.body.orders);

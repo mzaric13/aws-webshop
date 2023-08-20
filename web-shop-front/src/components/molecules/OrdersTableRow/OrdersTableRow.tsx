@@ -1,5 +1,6 @@
 import moment from "moment";
 import { OrderReturnValue, OrderStatus } from "../../../models/Order";
+import { getRole } from "../../../services/token-service";
 import { getSelectStatusOptions } from "../../../utils/Util";
 import ProductTableField from "../../atoms/ProductTableField/ProductTableField";
 
@@ -26,7 +27,7 @@ const OrdersTableRow = ({
   };
   return (
     <tr className={getClassNames()}>
-      {sessionStorage.getItem("role") === "Admin" ? (
+      {getRole() === "ADMIN" ? (
         <>
           <ProductTableField
             data={order.id}
@@ -57,8 +58,7 @@ const OrdersTableRow = ({
         itemId={order.id}
         onClick={onClick}
       />
-      {order.status === "ACCEPTED" &&
-      sessionStorage.getItem("role") === "Admin" ? (
+      {order.status === "ACCEPTED" && getRole() === "ADMIN" ? (
         <ProductTableField
           data={order.status}
           type="select"
@@ -82,8 +82,7 @@ const OrdersTableRow = ({
         itemId={order.id}
         onClick={onClick}
       />
-      {sessionStorage.getItem("role") === "User" &&
-      order.status === "SHIPPED" ? (
+      {getRole() === "USER" && order.status === "SHIPPED" ? (
         <ProductTableField
           data={"Mark as delivered"}
           itemId={order.id}

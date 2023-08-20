@@ -1,7 +1,8 @@
 import { FormEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import User from "../../../models/User";
+
+import { UserCreation } from "../../../models/User";
 import { signUp } from "../../../services/user-service";
 import { validateUserData } from "../../../utils/Validator";
 import Button from "../../atoms/Button/Button";
@@ -37,7 +38,7 @@ const SignUpPage = () => {
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     const message = validateUserData(formData);
     if (message === "Success") {
-      const user: User = {
+      const user: UserCreation = {
         username: formData.email,
         password: formData.password,
         givenName: formData.firstName,

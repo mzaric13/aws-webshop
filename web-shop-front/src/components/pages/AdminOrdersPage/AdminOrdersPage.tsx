@@ -31,7 +31,6 @@ const AdminOrdersPage = () => {
   });
 
   useEffect(() => {
-    sessionStorage.setItem("role", "Admin");
     getOrderStatuses()
       .then((res) => {
         if (res.data.statusCode === 200) {

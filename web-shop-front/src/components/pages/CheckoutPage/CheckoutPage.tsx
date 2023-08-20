@@ -4,8 +4,9 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useShoppingCart } from "../../../context/ShoppingCartContext";
 import { Order } from "../../../models/Order";
-import User from "../../../models/User";
+import { User } from "../../../models/User";
 import { createOrderBE, executePayment } from "../../../services/order-service";
+import { getLoggedUser } from "../../../services/user-service";
 import { createOrderItems, getNavbarLinks } from "../../../utils/Util";
 import ShoppingCartItems from "../../molecules/ShoppingCartItems/ShoppingCartItems";
 import CheckoutFormFields from "../../organisms/CheckoutFormFields/CheckoutFormFields";
@@ -15,20 +16,30 @@ import Navbar from "../../organisms/Navbar/Navbar";
 const CheckoutPage = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState<User>({
-    address: "Srbija, Vojvodina, Zmaj Jovina 5, 21000 Novi Sad",
-    birthdate: "2001-06-12",
-    familyName: "Markovic",
-    givenName: "Marko",
-    username: "kupac1@mail.com",
-    password: "",
-    phoneNumber: "+381638436842",
+    id: -1,
+    address: ",,, ",
+    birthdate: new Date(),
+    familyName: "",
+    givenName: "",
+    email: "",
+    phoneNumber: "",
   });
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const { cartItems, emptyCart } = useShoppingCart();
 
   useEffect(() => {
     if (cartItems.length === 0) navigate("/products");
-    setIsLoading(false);
+    getLoggedUser()
+      .then((res) => {
+        if (res.data.statusCode === 200) {
+          setUser(res.data.body);
+          setIsLoading(false);
+        } else {
+          toast.error(res.data.body as unknown as string);
+        }
+      })
+      .catch((err) => console.log(err));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const calculatePrice = (): number => {
@@ -44,7 +55,7 @@ const CheckoutPage = () => {
 
   const onCreate = (data: any, actions: any): Promise<string> => {
     const order: Order = {
-      userId: 2,
+      userId: user.id,
       price: calculatePrice(),
       orderItems: createOrderItems(cartItems),
     };

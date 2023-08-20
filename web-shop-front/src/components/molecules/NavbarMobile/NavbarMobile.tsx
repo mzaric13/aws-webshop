@@ -3,7 +3,7 @@ import { Dispatch, SetStateAction } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import NavbarLinks from "../../../models/NavbarLinks";
 import { logout } from "../../../services/auth-service";
-import { getToken } from "../../../services/token-service";
+import { deleteToken, getAccessToken } from "../../../services/token-service";
 import NavbarButton from "../../atoms/NavbarButton/NavbarButton";
 import NavButtons from "../NavButtons/NavButtons";
 
@@ -21,7 +21,7 @@ const NavbarMobile = ({
   const navigate = useNavigate();
 
   const isLoggedIn = () => {
-    const token = getToken();
+    const token = getAccessToken();
     if (!token || token === "undefined") return false;
     return true;
   };
@@ -51,8 +51,16 @@ const NavbarMobile = ({
                 <span
                   className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-[#eee] hover:bg-[#f90] cursor-pointer"
                   onClick={() => {
-                    logout();
-                    navigate("/");
+                    logout()
+                      .then((res) => {
+                        if (res.data.statusCode === 200) {
+                          deleteToken();
+                          navigate("/");
+                        } else {
+                          console.log(res.data);
+                        }
+                      })
+                      .catch((err) => console.log(err));
                   }}
                 >
                   Log out
